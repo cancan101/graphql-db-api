@@ -1,0 +1,9 @@
+[tool.black]
+exclude = '''
+(
+  /(
+      \.git          # root of the project
+    | \.mypy_cache
+  )/
+)
+'''
