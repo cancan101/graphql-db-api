@@ -13,8 +13,9 @@ engine = create_engine('graphql://host:port/path?is_https=0')
 ```
 
 ## Roadmap
-* [ ] Non-connections top level
+* [ ] Non-Connections top level
 * [ ] Path traversal
+* [ ] Passing Headers (e.g. Auth)
 * [ ] Filtering
 * [ ] Sorting
 * [ ] Pagination
