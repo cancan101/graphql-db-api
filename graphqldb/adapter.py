@@ -5,6 +5,8 @@ from shillelagh.adapters.base import Adapter
 from shillelagh.fields import Boolean, Field, Filter, Float, Integer, String
 from shillelagh.typing import RequestedOrder
 
+from .lib import run_query
+
 # -----------------------------------------------------------------------------
 
 
@@ -43,23 +45,17 @@ class GraphQLAdapter(Adapter):
     def __init__(
         self,
         table: str,
-        host: str,
-        port: str = None,
-        path: str = None,
-        is_https: bool = True,
+        graphql_api: str,
     ):
         super().__init__()
 
         self.table = table
 
-        self.is_https = is_https
-        self.host = host
-        self.port = port
-        self.path = path
+        self.graphql_api = graphql_api
 
         # we can get top level and then just pull in the needed types
         resp = requests.post(
-            self.get_url(),
+            self.graphql_api,
             json={
                 "query": """{
   __schema {
@@ -111,11 +107,6 @@ class GraphQLAdapter(Adapter):
         for field in column_info:
             self.columns.update(get_type_entries(field))
 
-    def get_url(self) -> str:
-        proto = "https" if self.is_https else "http"
-        port_str = "" if self.port is None else f":{self.port}"
-        return f"{proto}://{self.host}{port_str}/{self.path}"
-
     @staticmethod
     def supports(uri: str, fast: bool = True, **kwargs: Any) -> Optional[bool]:
         # TODO the slow path here could connect to the GQL Server
@@ -133,12 +124,7 @@ class GraphQLAdapter(Adapter):
         bounds: Dict[str, Filter],
         order: List[Tuple[str, RequestedOrder]],
     ) -> Iterator[Dict[str, Any]]:
-
-        resp = requests.post(
-            self.get_url(),
-            json={
-                "query": f"""
-query{{
+        query = f"""query {{
   {self.table}{{
     edges{{
       node{{
@@ -146,12 +132,10 @@ query{{
       }}
     }}
   }}
-}}
-        """
-            },
-        )
-        data = resp.json()
-        for edge in data["data"][self.table]["edges"]:
+}}"""
+        query_data = run_query(self.graphql_api, query=query)
+
+        for edge in query_data[self.table]["edges"]:
             node = edge["node"]
 
             yield {c: node.get(c) for c in self.columns.keys()}
