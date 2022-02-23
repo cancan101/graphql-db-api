@@ -164,6 +164,8 @@ tomli==2.0.1
     #   pep517
 types-requests==2.27.11
     # via -r requirements-dev.in
+types-setuptools==57.4.9
+    # via -r requirements-dev.in
 types-urllib3==1.26.9
     # via types-requests
 typing-extensions==3.10.0.2

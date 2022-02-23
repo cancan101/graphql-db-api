@@ -8,7 +8,7 @@ from shillelagh.typing import RequestedOrder
 # -----------------------------------------------------------------------------
 
 
-def parse_gql_type(type_obj):
+def parse_gql_type(type_obj) -> Optional[Field]:
     name: Optional[str] = type_obj["name"]
     if name is None:
         # array
@@ -28,7 +28,7 @@ def parse_gql_type(type_obj):
         raise ValueError(f"Unknown type: {name}")
 
 
-def get_type_entries(field_obj):
+def get_type_entries(field_obj) -> Dict[str, Field]:
     field_field = parse_gql_type(field_obj["type"])
     if field_field is None:
         # array
@@ -39,11 +39,6 @@ def get_type_entries(field_obj):
 
 class GraphQLAdapter(Adapter):
     safe = True
-
-    def get_url(self):
-        proto = "https" if self.is_https else "http"
-        port_str = "" if self.port is None else f":{self.port}"
-        return f"{proto}://{self.host}{port_str}/{self.path}"
 
     def __init__(
         self,
@@ -66,8 +61,7 @@ class GraphQLAdapter(Adapter):
         resp = requests.post(
             self.get_url(),
             json={
-                "query": """
-{
+                "query": """{
   __schema {
     queryType {
       fields {
@@ -98,8 +92,7 @@ class GraphQLAdapter(Adapter):
       }
     }
   }
-}
-        """
+}"""
             },
         )
         schema_info = resp.json()
@@ -117,6 +110,11 @@ class GraphQLAdapter(Adapter):
         self.columns: Dict[str, Field] = {}
         for field in column_info:
             self.columns.update(get_type_entries(field))
+
+    def get_url(self) -> str:
+        proto = "https" if self.is_https else "http"
+        port_str = "" if self.port is None else f":{self.port}"
+        return f"{proto}://{self.host}{port_str}/{self.path}"
 
     @staticmethod
     def supports(uri: str, fast: bool = True, **kwargs: Any) -> Optional[bool]:
