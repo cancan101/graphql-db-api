@@ -60,7 +60,7 @@ class GraphQLAdapter(Adapter):
 
         self.graphql_api = graphql_api
 
-        query_tables_and_types = """{
+        query_type_and_types_query = """{
   __schema {
     queryType {
       fields {
@@ -70,20 +70,6 @@ class GraphQLAdapter(Adapter):
         }
       }
     }
-  }
-}"""
-
-        data_tables_and_types = run_query(
-            self.graphql_api, query=query_tables_and_types
-        )
-        query_return_fields = data_tables_and_types["__schema"]["queryType"]["fields"]
-
-        # find the matching query (a field on the query object)
-        query_field_type = find_type_by_name(table, types=query_return_fields)
-        query_return_type_name = query_field_type["name"]
-
-        query_types_info = """{
-  __schema {
     types {
       name
       fields {
@@ -99,11 +85,18 @@ class GraphQLAdapter(Adapter):
   }
 }"""
 
-        data_types_info = run_query(
-            self.graphql_api,
-            query=query_types_info,
+        query_type_and_types = run_query(
+            self.graphql_api, query=query_type_and_types_query
         )
-        data_types = data_types_info["__schema"]["types"]
+        query_type_and_types_schema = query_type_and_types["__schema"]
+        query_return_fields = query_type_and_types_schema["queryType"]["fields"]
+
+        # find the matching query (a field on the query object)
+        query_return_type_name = find_type_by_name(table, types=query_return_fields)[
+            "name"
+        ]
+
+        data_types = query_type_and_types_schema["types"]
 
         def get_type_fields(name: str):
             return find_by_name(name, types=data_types)["fields"]
