@@ -1,6 +1,5 @@
 from typing import Any, Dict, Iterator, List, Optional, Tuple
 
-import requests
 from shillelagh.adapters.base import Adapter
 from shillelagh.fields import Boolean, Field, Filter, Float, Integer, String
 from shillelagh.typing import RequestedOrder
@@ -53,52 +52,64 @@ class GraphQLAdapter(Adapter):
 
         self.graphql_api = graphql_api
 
-        # we can get top level and then just pull in the needed types
-        resp = requests.post(
-            self.graphql_api,
-            json={
-                "query": """{
+        query_tables_and_types = """{
   __schema {
     queryType {
       fields {
         name
         type {
-          fields {
-            name
-            type {
-              ofType {
-                name
-                fields {
-                  name
-                  type {
-                    fields {
-                      name
-                      type {
-                        name
-                      }
-                    }
-                  }
-                }
-              }
-              kind
-            }
-          }
           name
         }
       }
     }
   }
 }"""
-            },
+
+        data_tables_and_types = run_query(
+            self.graphql_api, query=query_tables_and_types
         )
-        schema_info = resp.json()
-        query_fields = schema_info["data"]["__schema"]["queryType"]["fields"]
-        # find the matching query (a field on the quey object)
-        table_info = [x for x in query_fields if x["name"] == table][0]["type"]
+        query_fields = data_tables_and_types["__schema"]["queryType"]["fields"]
+        # find the matching query (a field on the query object)
+        query_field_type = [x for x in query_fields if x["name"] == table][0]["type"]
+
+        query_field_type_name = query_field_type["name"]
+
+        query_type_info = """query TypeInfo($typeName: String!) {
+  __type(name: $typeName) {
+    name
+    fields {
+      name
+      type {
+        ofType {
+          name
+          fields {
+            name
+            type {
+              fields {
+                name
+                type {
+                  name
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}"""
+
+        data_type_info = run_query(
+            self.graphql_api,
+            query=query_type_info,
+            variables={"typeName": query_field_type_name},
+        )
+        data_type_info_type = data_type_info["__type"]
+
         # we are assuming a top level connection
-        edges_info = [x for x in table_info["fields"] if x["name"] == "edges"][0][
-            "type"
-        ]["ofType"]
+        edges_info = [x for x in data_type_info_type["fields"] if x["name"] == "edges"][
+            0
+        ]["type"]["ofType"]
         node_info = [x for x in edges_info["fields"] if x["name"] == "node"][0]
 
         column_info = node_info["type"]["fields"]
