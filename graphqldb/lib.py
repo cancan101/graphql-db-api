@@ -3,13 +3,10 @@ from typing import Any, Dict
 import requests
 
 
-def run_query(
-    graphql_api: str, *, query: str, variables: Dict[str, Any] = None
-) -> Dict[str, Any]:
-    variables = variables or {}
+def run_query(graphql_api: str, *, query: str) -> Dict[str, Any]:
     resp = requests.post(
         graphql_api,
-        json={"query": query, "variables": variables},
+        json={"query": query},
     )
     resp.raise_for_status()
     resp_data = resp.json()

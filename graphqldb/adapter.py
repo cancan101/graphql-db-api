@@ -38,41 +38,6 @@ def get_type_entries(field_obj) -> Dict[str, Field]:
         return {field_obj["name"]: field_field}
 
 
-def get_type_info(query_field_type_name: str, *, graphql_api: str):
-    query_type_info = """query TypeInfo($typeName: String!) {
-  __type(name: $typeName) {
-    name
-    fields {
-      name
-      type {
-        ofType {
-          name
-          fields {
-            name
-            type {
-              fields {
-                name
-                type {
-                  name
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-}"""
-
-    data_type_info = run_query(
-        graphql_api,
-        query=query_type_info,
-        variables={"typeName": query_field_type_name},
-    )
-    data_type_info_type = data_type_info["__type"]
-    return data_type_info_type
-
-
 def find_by_name(name: str, *, types: list) -> dict:
     return [x for x in types if x["name"] == name][0]
 
