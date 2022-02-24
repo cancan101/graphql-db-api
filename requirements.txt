@@ -36,6 +36,7 @@ tomli==2.0.1
     # via mypy
 typing-extensions==3.10.0.2
     # via
+    #   -r requirements.in
     #   mypy
     #   shillelagh
     #   sqlalchemy2-stubs

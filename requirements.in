@@ -1,3 +1,4 @@
 requests
 shillelagh
 sqlalchemy[mypy]
+typing-extensions

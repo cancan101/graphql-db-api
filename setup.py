@@ -22,6 +22,7 @@ setup(
         "shillelagh >= 1.0.6",
         "sqlalchemy >= 1.3.0",
         "requests >= 2.20.0",
+        "typing-extensions",
     ),
     license="MIT",
     classifiers=[

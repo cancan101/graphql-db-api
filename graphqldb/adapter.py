@@ -1,4 +1,10 @@
-from typing import Any, Dict, Iterator, List, Optional, Tuple
+import sys
+from typing import Any, Dict, Iterator, List, Optional, Tuple, TypeVar
+
+if sys.version_info >= (3, 8):
+    from typing import TypedDict
+else:
+    from typing_extensions import TypedDict
 
 from shillelagh.adapters.base import Adapter
 from shillelagh.fields import Boolean, Field, Filter, Float, Integer, String
@@ -38,11 +44,30 @@ def get_type_entries(field_obj) -> Dict[str, Field]:
         return {field_obj["name"]: field_field}
 
 
-def find_by_name(name: str, *, types: list) -> dict:
+class Named(TypedDict):
+    name: str
+
+
+T = TypeVar("T", bound=Named)
+
+
+def find_by_name(name: str, *, types: List[T]) -> T:
     return [x for x in types if x["name"] == name][0]
 
 
-def find_type_by_name(name: str, *, types: list) -> dict:
+class TypeInfo(Named):
+    ofType: Named
+
+
+class FieldInfo(Named):
+    type: TypeInfo
+
+
+class TypeWithFields(Named):
+    fields: List[FieldInfo]
+
+
+def find_type_by_name(name: str, *, types: List[FieldInfo]) -> TypeInfo:
     return find_by_name(name, types=types)["type"]
 
 
@@ -89,25 +114,27 @@ class GraphQLAdapter(Adapter):
             self.graphql_api, query=query_type_and_types_query
         )
         query_type_and_types_schema = query_type_and_types["__schema"]
-        query_return_fields = query_type_and_types_schema["queryType"]["fields"]
+        queries_return_fields: List[FieldInfo] = query_type_and_types_schema[
+            "queryType"
+        ]["fields"]
 
         # find the matching query (a field on the query object)
-        query_return_type_name = find_type_by_name(table, types=query_return_fields)[
+        query_return_type_name = find_type_by_name(table, types=queries_return_fields)[
             "name"
         ]
 
-        data_types = query_type_and_types_schema["types"]
+        data_types: List[TypeWithFields] = query_type_and_types_schema["types"]
 
-        def get_type_fields(name: str):
+        def get_type_fields(name: str) -> List[FieldInfo]:
             return find_by_name(name, types=data_types)["fields"]
 
         query_return_fields = get_type_fields(query_return_type_name)
 
-        def get_edges_type_name(fields) -> str:
+        def get_edges_type_name(fields: List[FieldInfo]) -> str:
             edges_info = find_type_by_name("edges", types=fields)["ofType"]
             return edges_info["name"]
 
-        def get_node_type_name(fields) -> str:
+        def get_node_type_name(fields: List[FieldInfo]) -> str:
             node_info = find_type_by_name("node", types=fields)
             return node_info["name"]
 
