@@ -281,6 +281,8 @@ class GraphQLAdapter(Adapter):
         def getter(node: Dict[str, Any], field_name: str) -> Any:
             ret: Any = node
             for path in field_name.split("__"):
+                if ret is None:
+                    return ret
                 ret = ret.get(path)
             return ret
 
