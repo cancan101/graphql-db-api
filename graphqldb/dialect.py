@@ -1,5 +1,5 @@
 import urllib.parse
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Sequence, Tuple, Union
 
 from shillelagh.backends.apsw.dialects.base import APSWDialect
 from sqlalchemy.engine import Connection
@@ -11,7 +11,7 @@ from .lib import run_query
 
 
 # Imported from: shillelagh.backends.apsw.dialects.gsheets
-def extract_query(url: URL) -> Dict[str, str]:
+def extract_query(url: URL) -> Dict[str, Union[str, Sequence[str]]]:
     """
     Extract the query from the SQLAlchemy URL.
     """
@@ -36,6 +36,7 @@ class APSWGraphQLDialect(APSWDialect):
         self,
         **kwargs: Any,
     ):
+        # We tell Shillelagh that this dialect supports just one adapter
         super().__init__(safe=True, adapters=["graphql"], **kwargs)
 
     def get_table_names(
