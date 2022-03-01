@@ -14,5 +14,6 @@ isort
 mypy
 pip-tools
 pre-commit
+pytest
 types-requests
 types-setuptools

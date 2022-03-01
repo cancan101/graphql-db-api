@@ -1,6 +1,6 @@
 import sys
 from collections import defaultdict
-from typing import Any, Collection, Dict, Iterator, List, Optional, Tuple
+from typing import Any, Collection, Dict, Iterator, List, Optional, Sequence, Tuple
 from urllib.parse import parse_qs, urlparse
 
 if sys.version_info >= (3, 8):
@@ -147,13 +147,36 @@ def get_node_type_name(fields: List[FieldInfo]) -> Optional[str]:
 # -----------------------------------------------------------------------------
 
 
-def _extract_flattened_value(node: Dict[str, Any], field_name: str) -> Any:
+def extract_flattened_value(node: Dict[str, Any], field_name: str) -> Any:
     ret: Any = node
     for path in field_name.split("__"):
         if ret is None:
             return ret
+        elif not isinstance(ret, dict):
+            raise TypeError(f"{field_name} is not dict path")
         ret = ret.get(path)
     return ret
+
+
+def get_gql_fields(column_names: Sequence[str]) -> str:
+    # TODO(cancan101): actually nest this
+    def get_field_str(fields: List[str], root: str = None) -> str:
+        ret = " ".join(fields)
+        if root is not None:
+            ret = f"{root} {{{ret}}}"
+        return ret
+
+    mappings: Dict[Optional[str], List[str]] = defaultdict(list)
+    for field in [x.split("__", 1) for x in column_names]:
+        if len(field) == 1:
+            mappings[None].append(field[-1])
+        else:
+            mappings[field[0]].append(field[-1])
+
+    fields_str = " ".join(
+        get_field_str(fields, root=root) for root, fields in mappings.items()
+    )
+    return fields_str
 
 
 # -----------------------------------------------------------------------------
@@ -281,23 +304,7 @@ class GraphQLAdapter(Adapter):
         bounds: Dict[str, Filter],
         order: List[Tuple[str, RequestedOrder]],
     ) -> Iterator[Dict[str, Any]]:
-
-        # TODO(cancan101): actually nest this
-        def get_field_str(fields: List[str], root: str = None) -> str:
-            ret = " ".join(fields)
-            if root is not None:
-                ret = f"{root} {{{ret}}}"
-            return ret
-
-        mappings: Dict[Optional[str], List[str]] = defaultdict(list)
-        for field in [x.split("__", 1) for x in self.columns.keys()]:
-            if len(field) == 1:
-                mappings[None].append(field[-1])
-            else:
-                mappings[field[0]].append(field[-1])
-        fields_str = " ".join(
-            get_field_str(fields, root=root) for root, fields in mappings.items()
-        )
+        fields_str = get_gql_fields(list(self.columns.keys()))
 
         query = f"""query {{
   {self.table}{{
@@ -313,4 +320,4 @@ class GraphQLAdapter(Adapter):
         for edge in query_data[self.table]["edges"]:
             node: Dict[str, Any] = edge["node"]
 
-            yield {c: _extract_flattened_value(node, c) for c in self.columns.keys()}
+            yield {c: extract_flattened_value(node, c) for c in self.columns.keys()}
