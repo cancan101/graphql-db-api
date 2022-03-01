@@ -66,14 +66,18 @@ def get_type_entries(
     path: List[str] = None,
 ) -> Dict[str, Field]:
     path = path or []
-    new_path = path + [field_obj["name"]]
 
-    kind = field_obj["type"]["kind"]
+    field_name = field_obj["name"]
+    new_path = path + [field_name]
+
+    field_obj_type = field_obj["type"]
+
+    kind = field_obj_type["kind"]
     if kind == "SCALAR":
-        field_field = parse_gql_type(field_obj["type"])
+        field_field = parse_gql_type(field_obj_type)
         return {"__".join(new_path): field_field}
     elif kind == "NON_NULL":
-        of_type = field_obj["type"]["ofType"]
+        of_type = field_obj_type["ofType"]
 
         if of_type is None:
             raise ValueError("of_type is None")
@@ -84,22 +88,27 @@ def get_type_entries(
 
         return get_type_entries(
             FieldInfo(
-                name=field_obj["name"],
+                name=field_name,
                 type=data_types[of_type_name],
             ),
             data_types=data_types,
             include=include,
             path=path,
         )
+    # TODO(cancan101): other types to handle:
+    # LIST, ENUM, UNION, INTERFACE, OBJECT (implicitly handled)
     else:
-        # TODO(cancan101): other types to handle:
-        # LIST, ENUM, UNION, INTERFACE, OBJECT (implicitly handled)
-        if field_obj["name"] in include:
+        # Check to see if this is a requested include
+        if field_name in include:
             ret = {}
-            name = field_obj["type"]["name"]
+            name = field_obj_type["name"]
             if name is None:
-                return {}
-            fields = data_types[name]["fields"] or []
+                raise ValueError(f"Unable to get type of: {field_name}")
+
+            fields = data_types[name]["fields"]
+            if fields is None:
+                raise ValueError(f"Unable to get fields for: {name}")
+
             for field in fields:
                 ret.update(
                     get_type_entries(
@@ -111,6 +120,9 @@ def get_type_entries(
         return {}
 
 
+# -----------------------------------------------------------------------------
+
+
 # clean these up:
 def find_by_name(name: str, *, types: List[FieldInfo]) -> FieldInfo:
     return [x for x in types if x["name"] == name][0]
@@ -118,6 +130,33 @@ def find_by_name(name: str, *, types: List[FieldInfo]) -> FieldInfo:
 
 def find_type_by_name(name: str, *, types: List[FieldInfo]) -> TypeInfo:
     return find_by_name(name, types=types)["type"]
+
+
+def get_edges_type_name(fields: List[FieldInfo]) -> Optional[str]:
+    edges_info = find_type_by_name("edges", types=fields)["ofType"]
+    if edges_info is None:
+        return None
+    return edges_info["name"]
+
+
+def get_node_type_name(fields: List[FieldInfo]) -> Optional[str]:
+    node_info = find_type_by_name("node", types=fields)
+    return node_info["name"]
+
+
+# -----------------------------------------------------------------------------
+
+
+def _extract_flattened_value(node: Dict[str, Any], field_name: str) -> Any:
+    ret: Any = node
+    for path in field_name.split("__"):
+        if ret is None:
+            return ret
+        ret = ret.get(path)
+    return ret
+
+
+# -----------------------------------------------------------------------------
 
 
 class GraphQLAdapter(Adapter):
@@ -184,33 +223,26 @@ class GraphQLAdapter(Adapter):
             t["name"]: t for t in data_types_list if t["name"] is not None
         }
 
-        def get_type_fields(name: str) -> List[FieldInfo]:
-            return data_types[name]["fields"] or []
-
-        query_return_fields = get_type_fields(query_return_type_name)
-
-        def get_edges_type_name(fields: List[FieldInfo]) -> Optional[str]:
-            edges_info = find_type_by_name("edges", types=fields)["ofType"]
-            if edges_info is None:
-                return None
-            return edges_info["name"]
-
-        def get_node_type_name(fields: List[FieldInfo]) -> Optional[str]:
-            node_info = find_type_by_name("node", types=fields)
-            return node_info["name"]
+        query_return_fields = data_types[query_return_type_name]["fields"]
+        if query_return_fields is None:
+            raise ValueError("No fields found on query")
 
         # we are assuming a top level connection
         edges_type_name = get_edges_type_name(query_return_fields)
         if edges_type_name is None:
             raise ValueError("Unable to resolve edges_type_name")
 
-        edges_fields = get_type_fields(edges_type_name)
+        edges_fields = data_types[edges_type_name]["fields"]
+        if edges_fields is None:
+            raise ValueError("No fields found on edge")
 
         node_type_name = get_node_type_name(edges_fields)
         if node_type_name is None:
             raise ValueError("Unable to resolve node_type_name")
 
-        node_fields = get_type_fields(node_type_name)
+        node_fields = data_types[node_type_name]["fields"]
+        if node_fields is None:
+            raise ValueError("No fields found on node")
 
         self.columns: Dict[str, Field] = {}
         for node_field in node_fields:
@@ -278,15 +310,7 @@ class GraphQLAdapter(Adapter):
 }}"""
         query_data = run_query(self.graphql_api, query=query)
 
-        def getter(node: Dict[str, Any], field_name: str) -> Any:
-            ret: Any = node
-            for path in field_name.split("__"):
-                if ret is None:
-                    return ret
-                ret = ret.get(path)
-            return ret
-
         for edge in query_data[self.table]["edges"]:
             node: Dict[str, Any] = edge["node"]
 
-            yield {c: getter(node, c) for c in self.columns.keys()}
+            yield {c: _extract_flattened_value(node, c) for c in self.columns.keys()}
