@@ -1,11 +1,30 @@
+import urllib.parse
 from typing import Any, Dict, List, Tuple
 
 from shillelagh.backends.apsw.dialects.base import APSWDialect
-from shillelagh.backends.apsw.dialects.gsheets import extract_query
 from sqlalchemy.engine import Connection
 from sqlalchemy.engine.url import URL
 
 from .lib import run_query
+
+# -----------------------------------------------------------------------------
+
+
+# Imported from: shillelagh.backends.apsw.dialects.gsheets
+def extract_query(url: URL) -> Dict[str, str]:
+    """
+    Extract the query from the SQLAlchemy URL.
+    """
+    if url.query:
+        return dict(url.query)
+
+    # there's a bug in how SQLAlchemy <1.4 handles URLs without hosts,
+    # putting the query string as the host; handle that case here
+    if url.host and url.host.startswith("?"):
+        return dict(urllib.parse.parse_qsl(url.host[1:]))  # pragma: no cover
+
+    return {}
+
 
 # -----------------------------------------------------------------------------
 
