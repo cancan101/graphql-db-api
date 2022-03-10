@@ -2,10 +2,13 @@ from setuptools import find_packages, setup
 
 # -----------------------------------------------------------------------------
 
+DESCRIPTION = "Python DB-API and SQLAlchemy interface for GraphQL APIs."
+
 setup(
-    name="graphqldb",
-    version="0.0.1",
-    description="Python DB-API and SQLAlchemy interface for GraphQL APIs.",
+    name="sqlalchemy-graphqlapi",
+    version="0.0.1.dev0",
+    description=DESCRIPTION,
+    long_description=DESCRIPTION,
     author="Alex Rothberg",
     author_email="agrothberg@gmail.com",
     url="https://github.com/cancan101/graphql-db-api",
@@ -33,7 +36,7 @@ setup(
         "Programming Language :: Python",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
-        "Programming Language :: Python :: 3.9"
+        "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: Implementation :: CPython",
     ],
