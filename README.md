@@ -1,4 +1,4 @@
-# graphql-db-api
+# graphql-db-api [![PyPI version](https://badge.fury.io/py/sqlalchemy-graphqlapi.svg)](https://badge.fury.io/py/sqlalchemy-graphqlapi)
 A Python DB API 2.0 for GraphQL APIs
 
 This module allows you to query GraphQL APIs using SQL.
