@@ -29,6 +29,9 @@ with engine.connect() as connection:
         print(row)
 ```
 
+## Installation
+I was having issues getting with `apsw-3.9.2.post1` (the newest version of `apsw` that would install for me from PyPI) and ended up needing to follow [the instructions here](https://shillelagh.readthedocs.io/en/latest/install.html) to build / install from source. There is an [open ticket on the APSW project](https://github.com/rogerbinns/apsw/issues/310) to provide newer wheels.
+
 ## Roadmap
 * [ ] Non-Connections top level
 * [x] Path traversal (basic)
