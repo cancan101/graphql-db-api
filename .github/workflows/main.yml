@@ -53,7 +53,7 @@ jobs:
 
       - name: Install self
         run: |
-          pip -e .
+          pip install -e .
 
       - name: Test with pytest
         run: |
