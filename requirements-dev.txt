@@ -51,7 +51,7 @@ flake8==4.0.1
     #   flake8-print
 flake8-bandit==3.0.0
     # via -r requirements-dev.in
-flake8-black==0.2.4
+flake8-black==0.3.2
     # via -r requirements-dev.in
 flake8-bugbear==22.1.11
     # via -r requirements-dev.in
@@ -175,14 +175,13 @@ stevedore==3.5.0
 testfixtures==6.18.5
     # via flake8-isort
 toml==0.10.2
-    # via
-    #   flake8-black
-    #   pre-commit
+    # via pre-commit
 tomli==2.0.1
     # via
     #   -r requirements.txt
     #   black
     #   coverage
+    #   flake8-black
     #   mypy
     #   pep517
     #   pytest
