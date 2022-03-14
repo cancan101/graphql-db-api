@@ -30,7 +30,10 @@ with engine.connect() as connection:
 ```
 
 ## Installation
-I was having issues getting with `apsw-3.9.2.post1` (the newest version of `apsw` that would install for me from PyPI) and ended up needing to follow [the instructions here](https://shillelagh.readthedocs.io/en/latest/install.html) to build / install from source. There is an [open ticket on the APSW project](https://github.com/rogerbinns/apsw/issues/310) to provide newer wheels.
+I was having issues with `apsw-3.9.2.post1` (the newest version of `apsw` that would install for me from PyPI) and ended up needing to follow [the instructions here](https://shillelagh.readthedocs.io/en/latest/install.html) to build / install `apsw` from source. There is an [open ticket on the APSW project](https://github.com/rogerbinns/apsw/issues/310) to provide newer wheels. The issue might be triggered if the table name needs escaping and the error looked like:
+```
+SystemError: <method 'execute' of 'apsw.Cursor' objects> returned NULL without setting an exception
+```
 
 ## Roadmap
 * [ ] Non-Connections top level
