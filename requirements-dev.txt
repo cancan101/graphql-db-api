@@ -12,7 +12,7 @@ attrs==21.4.0
     # via
     #   flake8-bugbear
     #   pytest
-bandit==1.7.2
+bandit==1.7.4
     # via flake8-bandit
 black==22.1.0
     # via
@@ -47,7 +47,7 @@ flake8==4.0.1
     #   flake8-isort
     #   flake8-polyfill
     #   flake8-print
-flake8-bandit==2.1.2
+flake8-bandit==3.0.0
     # via -r requirements-dev.in
 flake8-black==0.2.4
     # via -r requirements-dev.in
