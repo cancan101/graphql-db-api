@@ -12,7 +12,7 @@ attrs==21.4.0
     # via
     #   flake8-bugbear
     #   pytest
-bandit==1.7.2
+bandit==1.7.4
     # via flake8-bandit
 black==22.1.0
     # via
