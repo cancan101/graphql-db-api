@@ -15,5 +15,6 @@ mypy
 pip-tools
 pre-commit
 pytest
+pytest-cov
 types-requests
 types-setuptools
