@@ -32,6 +32,8 @@ click==8.0.4
     # via
     #   black
     #   pip-tools
+coverage[toml]==6.3.2
+    # via pytest-cov
 distlib==0.3.4
     # via virtualenv
 filelock==3.6.0
@@ -132,6 +134,10 @@ pyflakes==2.4.0
 pyparsing==3.0.7
     # via packaging
 pytest==7.0.1
+    # via
+    #   -r requirements-dev.in
+    #   pytest-cov
+pytest-cov==3.0.0
     # via -r requirements-dev.in
 python-dateutil==2.8.2
     # via
@@ -174,6 +180,7 @@ tomli==2.0.1
     # via
     #   -r requirements.txt
     #   black
+    #   coverage
     #   mypy
     #   pep517
     #   pytest
