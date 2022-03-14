@@ -46,6 +46,15 @@ jobs:
         run: |
           flake8 .
 
+      - name: Fix dependencies
+        run: |
+          pip uninstall -y apsw
+          pip install "apsw-wheels==3.36.0.post1"
+
+      - name: Install self
+        run: |
+          pip install -e .
+
       - name: Test with pytest
         run: |
           pytest --cov=./ --cov-report=xml
