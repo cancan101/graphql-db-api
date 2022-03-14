@@ -170,7 +170,7 @@ sqlalchemy2-stubs==0.0.2a20
     #   sqlalchemy
 stevedore==3.5.0
     # via bandit
-testfixtures==6.18.3
+testfixtures==6.18.5
     # via flake8-isort
 toml==0.10.2
     # via
