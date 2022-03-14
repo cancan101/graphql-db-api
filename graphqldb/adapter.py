@@ -39,7 +39,7 @@ class TypeInfoWithFields(TypeInfo):
 # -----------------------------------------------------------------------------
 
 
-def parse_gql_type(type_info: TypeInfo) -> Optional[Field]:
+def parse_gql_type(type_info: TypeInfo) -> Field:
     # TODO(cancan101): do we want to handle Nones here?
     name: Optional[str] = type_info["name"]
     if name == "String":

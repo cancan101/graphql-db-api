@@ -21,8 +21,10 @@ mypy-extensions==0.4.3
 python-dateutil==2.8.2
     # via shillelagh
 requests==2.27.1
-    # via -r requirements.in
-shillelagh==1.0.6
+    # via
+    #   -r requirements.in
+    #   shillelagh
+shillelagh==1.0.10
     # via -r requirements.in
 six==1.16.0
     # via python-dateutil
