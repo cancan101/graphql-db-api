@@ -63,7 +63,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: .mypy_cache
-          key: mypy1-${{ hashFiles('./deskman_api/**/*.py') }}
+          key: mypy1-${{ hashFiles('./graphqldb/**/*.py') }}-${{ hashFiles('./tests/**/*.py') }}
           restore-keys: mypy1-
 
       - name: Test with mypy
