@@ -1,5 +1,7 @@
 from sqlalchemy import inspect, text
-from sqlalchemy.engine import Connection, Engine
+from sqlalchemy.engine import Connection, Engine, make_url
+
+from graphqldb.dialect import APSWGraphQLDialect
 
 
 def test_create_engine(swapi_engine: Engine) -> None:
@@ -29,3 +31,15 @@ def test_query(swapi_connection: Connection) -> None:
         )
     )
     assert len(list(result)) == 82
+
+
+def test_db_url_to_graphql_api():
+    url_http = make_url("graphql://host:123/path?is_https=0")
+    assert (
+        APSWGraphQLDialect().db_url_to_graphql_api(url_http) == "http://host:123/path"
+    )
+
+    url_https = make_url("graphql://host:123/path?is_https=1")
+    assert (
+        APSWGraphQLDialect().db_url_to_graphql_api(url_https) == "https://host:123/path"
+    )

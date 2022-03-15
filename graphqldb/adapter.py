@@ -5,7 +5,7 @@ from urllib.parse import parse_qs, urlparse
 
 if sys.version_info >= (3, 8):
     from typing import TypedDict
-else:
+else:  # pragma: no cover
     from typing_extensions import TypedDict
 
 from shillelagh.adapters.base import Adapter
@@ -286,13 +286,10 @@ class GraphQLAdapter(Adapter):
         query_string = parse_qs(parsed.query)
 
         include_entry = query_string.get("include")
-        include: List[str]
+        include: List[str] = []
         if include_entry:
-            include = []
             for i in include_entry:
                 include.extend(i.split(","))
-        else:
-            include = []
 
         return (parsed.path, include)
 

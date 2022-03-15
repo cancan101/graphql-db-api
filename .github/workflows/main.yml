@@ -46,6 +46,8 @@ jobs:
         run: |
           flake8 .
 
+      # Currently the version of apsw specified in requirements.txt file is quite old
+      # https://github.com/rogerbinns/apsw/issues/310
       - name: Fix dependencies
         run: |
           pip uninstall -y apsw
