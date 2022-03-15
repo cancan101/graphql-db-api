@@ -4,12 +4,17 @@ import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.engine import Connection, Engine
 
-SWAPI_GRAPHQL_API = "graphql://swapi-graphql.netlify.app/.netlify/functions/index"
+SWAPI_GRAPHQL_DB_URL = "graphql://swapi-graphql.netlify.app/.netlify/functions/index"
 
 
 @pytest.fixture
-def swapi_engine() -> Engine:
-    return create_engine(SWAPI_GRAPHQL_API)
+def swapi_graphq_db_url() -> str:
+    return SWAPI_GRAPHQL_DB_URL
+
+
+@pytest.fixture
+def swapi_engine(swapi_graphq_db_url: str) -> Engine:
+    return create_engine(swapi_graphq_db_url)
 
 
 @pytest.fixture
