@@ -1,0 +1,15 @@
+[run]
+omit =
+    setup.py
+
+[report]
+exclude_lines =
+    # Have to re-enable the standard pragma
+    pragma: no cover
+
+    # Don't complain if tests don't hit defensive assertion code:
+    raise NotImplementedError
+
+    # These lines are not run by tests
+    if typing.TYPE_CHECKING:
+    if TYPE_CHECKING:
