@@ -30,7 +30,7 @@ def extract_query(url: URL) -> Dict[str, Union[str, Sequence[str]]]:
 
 
 class APSWGraphQLDialect(APSWDialect):
-    supports_statement_cache = False
+    supports_statement_cache = True
 
     def __init__(
         self,
