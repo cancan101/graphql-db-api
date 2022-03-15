@@ -2,8 +2,7 @@ import urllib.parse
 from typing import Any, Dict, List, Sequence, Tuple, Union
 
 from shillelagh.backends.apsw.dialects.base import APSWDialect
-from sqlalchemy.engine import Connection
-from sqlalchemy.engine.url import URL
+from sqlalchemy.engine import URL, Connection
 
 from .lib import run_query
 
