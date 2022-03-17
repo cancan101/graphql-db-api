@@ -77,7 +77,7 @@ greenlet==1.1.2
     # via
     #   -r requirements.txt
     #   sqlalchemy
-identify==2.4.11
+identify==2.4.12
     # via pre-commit
 idna==3.3
     # via
