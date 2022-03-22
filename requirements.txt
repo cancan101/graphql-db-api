@@ -32,7 +32,7 @@ sqlalchemy[mypy]==1.4.31
     # via
     #   -r requirements.in
     #   shillelagh
-sqlalchemy2-stubs==0.0.2a20
+sqlalchemy2-stubs==0.0.2a21
     # via sqlalchemy
 tomli==2.0.1
     # via mypy
