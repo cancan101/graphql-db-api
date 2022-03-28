@@ -91,7 +91,7 @@ isort==5.10.1
     #   flake8-isort
 mccabe==0.6.1
     # via flake8
-mypy==0.941
+mypy==0.942
     # via
     #   -r requirements-dev.in
     #   -r requirements.txt
