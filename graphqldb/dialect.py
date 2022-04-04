@@ -9,6 +9,10 @@ from .lib import run_query
 
 # -----------------------------------------------------------------------------
 
+ADAPTER_NAME = "graphql"
+
+# -----------------------------------------------------------------------------
+
 
 # Imported from: shillelagh.backends.apsw.dialects.gsheets
 def extract_query(url: URL) -> Dict[str, Union[str, Sequence[str]]]:
@@ -37,7 +41,7 @@ class APSWGraphQLDialect(APSWDialect):
         **kwargs: Any,
     ):
         # We tell Shillelagh that this dialect supports just one adapter
-        super().__init__(safe=True, adapters=["graphql"], **kwargs)
+        super().__init__(safe=True, adapters=[ADAPTER_NAME], **kwargs)
 
     def get_table_names(
         self, connection: Connection, schema: str = None, **kwargs: Any
@@ -77,7 +81,9 @@ class APSWGraphQLDialect(APSWDialect):
                 f"Unexpected adapter_kwargs found: {kwargs['adapter_kwargs']}"
             )
 
-        adapter_kwargs = {"graphql": {"graphql_api": self.db_url_to_graphql_api(url)}}
+        adapter_kwargs = {
+            ADAPTER_NAME: {"graphql_api": self.db_url_to_graphql_api(url)}
+        }
 
         # this seems gross, esp the path override. unclear why memory has to be set here
         return args, {**kwargs, "path": ":memory:", "adapter_kwargs": adapter_kwargs}
