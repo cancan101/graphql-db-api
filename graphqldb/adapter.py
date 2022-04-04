@@ -1,18 +1,13 @@
-import sys
 from collections import defaultdict
 from typing import Any, Collection, Dict, Iterator, List, Optional, Sequence, Tuple
 from urllib.parse import parse_qs, urlparse
-
-if sys.version_info >= (3, 8):
-    from typing import TypedDict
-else:  # pragma: no cover
-    from typing_extensions import TypedDict
 
 from shillelagh.adapters.base import Adapter
 from shillelagh.fields import Boolean, Field, Filter, Float, Integer, String
 from shillelagh.typing import RequestedOrder
 
 from .lib import run_query
+from .types import TypedDict
 
 # -----------------------------------------------------------------------------
 
