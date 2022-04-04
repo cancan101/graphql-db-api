@@ -1,6 +1,8 @@
 [run]
 omit =
     setup.py
+    # We don't test this as we don't have Superset
+    graphqldb/db_engine_specs.py
 
 [report]
 exclude_lines =
