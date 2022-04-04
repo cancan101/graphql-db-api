@@ -9,7 +9,7 @@ from setuptools import Command, find_packages, setup
 # -----------------------------------------------------------------------------
 
 DESCRIPTION = "Python DB-API and SQLAlchemy interface for GraphQL APIs."
-VERSION = "0.0.1.dev0"
+VERSION = "0.0.1.dev1"
 
 # -----------------------------------------------------------------------------
 
