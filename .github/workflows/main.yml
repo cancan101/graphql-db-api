@@ -13,25 +13,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: "2"
+      - uses: actions/checkout@v3
 
       - name: Set up Python 3.9
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           # Semantic version range syntax or exact version of a Python version
           python-version: "3.9"
-
-      - name: Cache pip
-        uses: actions/cache@v2
-        with:
-          # This path is specific to Ubuntu
-          path: ~/.cache/pip
-          # Look to see if there is a cache hit for the corresponding requirements file
-          key: ${{ runner.os }}-pip-${{ hashFiles('requirements-dev.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
+          cache: 'pip'
+          cache-dependency-path: 'requirements-dev.txt'
 
       - name: Install dependencies
         run: |
@@ -40,7 +30,7 @@ jobs:
 
       - name: Test with black
         run: |
-          black . --check --target-version py39
+          black . --check --target-version py37
 
       - name: Test with flake8
         run: |
@@ -50,17 +40,8 @@ jobs:
       # https://github.com/rogerbinns/apsw/issues/310
       - name: Fix dependencies
         run: |
-          pip uninstall -y apsw
           pip install "apsw==3.36.0.post1"
-
-      - name: Install self
-        run: |
-          pip install -e .
-
-      - name: Test with pytest
-        run: |
-          pytest --cov=./ --cov-report=xml
-
+          
       - name: Set up mypy cache
         uses: actions/cache@v2
         with:
@@ -70,7 +51,15 @@ jobs:
 
       - name: Test with mypy
         run: |
-          mypy .
+          mypy .          
+
+      - name: Install self
+        run: |
+          pip install --no-cache-dir --no-dependencies -e .
+
+      - name: Test with pytest
+        run: |
+          pytest --cov=./ --cov-report=xml
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v2
