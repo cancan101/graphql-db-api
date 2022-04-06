@@ -3,11 +3,14 @@ from typing import Any, Dict
 import requests
 
 
-def run_query(graphql_api: str, *, query: str) -> Dict[str, Any]:
-    resp = requests.post(
-        graphql_api,
-        json={"query": query},
-    )
+def run_query(
+    graphql_api: str, *, query: str, bearer_token: str = None
+) -> Dict[str, Any]:
+    headers: Dict[str, Any] = {}
+    if bearer_token:
+        headers["Authorization"] = f"Bearer {bearer_token}"
+
+    resp = requests.post(graphql_api, json={"query": query}, headers=headers)
     try:
         resp.raise_for_status()
     except requests.HTTPError as ex:

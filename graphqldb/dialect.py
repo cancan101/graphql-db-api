@@ -46,7 +46,8 @@ class APSWGraphQLDialect(APSWDialect):
     def get_table_names(
         self, connection: Connection, schema: str = None, **kwargs: Any
     ) -> List[str]:
-        graphql_api = self.db_url_to_graphql_api(connection.engine.url)
+        url = connection.engine.url
+        graphql_api = self.db_url_to_graphql_api(url)
 
         query = """{
   __schema {
@@ -57,7 +58,8 @@ class APSWGraphQLDialect(APSWDialect):
     }
   }
 }"""
-        data = run_query(graphql_api, query=query)
+        bearer_token = str(url.password) if url.password else None
+        data = run_query(graphql_api, query=query, bearer_token=bearer_token)
 
         # TODO(cancan101): filter out "non-Array" returns
         # This is tricky as Connections are non-Array
@@ -81,8 +83,13 @@ class APSWGraphQLDialect(APSWDialect):
                 f"Unexpected adapter_kwargs found: {kwargs['adapter_kwargs']}"
             )
 
+        bearer_token = str(url.password) if url.password else None
+
         adapter_kwargs = {
-            ADAPTER_NAME: {"graphql_api": self.db_url_to_graphql_api(url)}
+            ADAPTER_NAME: {
+                "graphql_api": self.db_url_to_graphql_api(url),
+                "bearer_token": bearer_token,
+            }
         }
 
         # this seems gross, esp the path override. unclear why memory has to be set here

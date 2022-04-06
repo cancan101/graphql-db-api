@@ -16,5 +16,6 @@ pip-tools
 pre-commit
 pytest
 pytest-cov
+responses
 types-requests
 types-setuptools
