@@ -3,6 +3,8 @@ from shillelagh.fields import ISODate, ISODateTime, String
 
 from graphqldb.adapter import (
     TypeInfo,
+    _get_variable_argument_str,
+    _parse_query_args,
     extract_flattened_value,
     get_gql_fields,
     parse_gql_type,
@@ -68,3 +70,15 @@ def test_parse_gql_type():
 
     with pytest.raises(ValueError):
         parse_gql_type(TypeInfo(name=None, ofType=None, kind="SCALAR"))
+
+
+def test_get_variable_argument_str():
+    assert _get_variable_argument_str({"a": 1}) == 'a: "1"'
+    assert _get_variable_argument_str({"a": 1, "b": "c"}) == 'a: "1" b: "c"'
+
+
+def test_parse_query_args():
+    assert _parse_query_args({"arg_foo": ["bar"]}) == {"foo": "bar"}
+
+    with pytest.raises(ValueError):
+        _parse_query_args({"arg_foo": ["bar", "baz"]})
