@@ -191,6 +191,24 @@ def get_gql_fields(column_names: Sequence[str]) -> str:
     return fields_str
 
 
+def _parse_query_arg(k: str, v: List[str]) -> Tuple[str, str]:
+    if len(v) > 1:
+        raise ValueError(f"{k} was specified {len(v)} times")
+
+    return (k[4:], v[0])
+
+
+def _parse_query_args(query: Dict[str, List[str]]) -> Dict[str, str]:
+    return dict(
+        _parse_query_arg(k, v) for k, v in query.items() if k.startswith("arg_")
+    )
+
+
+def _get_variable_argument_str(args: Dict[str, str]) -> str:
+    # At some point we will want to handle other types (e.g. ints) here
+    return " ".join(f'{k}: "{v}"' for k, v in args.items())
+
+
 # -----------------------------------------------------------------------------
 
 
@@ -201,13 +219,17 @@ class GraphQLAdapter(Adapter):
         self,
         table: str,
         include: Collection[str],
+        query_args: Dict[str, str],
         graphql_api: str,
         bearer_token: str = None,
     ):
         super().__init__()
 
+        # The query field name
         self.table = table
+
         self.include = set(include)
+        self.query_args = query_args
 
         self.graphql_api = graphql_api
         self.bearer_token = bearer_token
@@ -293,7 +315,10 @@ class GraphQLAdapter(Adapter):
         return True
 
     @staticmethod
-    def parse_uri(table: str) -> Tuple[str, List[str]]:
+    def parse_uri(table: str) -> Tuple[str, List[str], Dict[str, str]]:
+        """
+        This will pass in the first n args of __init__ for the Adapter
+        """
         parsed = urlparse(table)
         query_string = parse_qs(parsed.query)
 
@@ -303,7 +328,9 @@ class GraphQLAdapter(Adapter):
             for i in include_entry:
                 include.extend(i.split(","))
 
-        return (parsed.path, include)
+        query_args = _parse_query_args(query_string)
+
+        return (parsed.path, include, query_args)
 
     def get_columns(self) -> Dict[str, Field]:
         return self.columns
@@ -318,8 +345,14 @@ class GraphQLAdapter(Adapter):
     ) -> Iterator[Dict[str, Any]]:
         fields_str = get_gql_fields(list(self.columns.keys()))
 
+        if self.query_args:
+            variable_str = f"({_get_variable_argument_str(self.query_args)})"
+        else:
+            # Don't generate the () for empty list of args
+            variable_str = ""
+
         query = f"""query {{
-  {self.table}{{
+  {self.table}{variable_str}{{
     edges{{
       node{{
         {fields_str}

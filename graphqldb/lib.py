@@ -4,7 +4,10 @@ import requests
 
 
 def run_query(
-    graphql_api: str, *, query: str, bearer_token: str = None
+    graphql_api: str,
+    *,
+    query: str,
+    bearer_token: str = None,
 ) -> Dict[str, Any]:
     headers: Dict[str, Any] = {}
     if bearer_token:
