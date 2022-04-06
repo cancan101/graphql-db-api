@@ -3,7 +3,16 @@ from typing import Any, Collection, Dict, Iterator, List, Optional, Sequence, Tu
 from urllib.parse import parse_qs, urlparse
 
 from shillelagh.adapters.base import Adapter
-from shillelagh.fields import Boolean, Field, Filter, Float, Integer, String
+from shillelagh.fields import (
+    Boolean,
+    Field,
+    Filter,
+    Float,
+    Integer,
+    ISODate,
+    ISODateTime,
+    String,
+)
 from shillelagh.typing import RequestedOrder
 
 from .lib import run_query
@@ -40,7 +49,8 @@ def parse_gql_type(type_info: TypeInfo) -> Field:
     if name == "String":
         return String()
     elif name == "ID":
-        # TODO(cancan101): figure out if we want to map this to UUID, etc
+        # TODO(cancan101): figure out if we want to map this to UUID, int, etc
+        # This should probably be an API-level setting
         return String()
     elif name == "Int":
         return Integer()
@@ -48,6 +58,13 @@ def parse_gql_type(type_info: TypeInfo) -> Field:
         return Float()
     elif name == "Boolean":
         return Boolean()
+    # These are extended scalars:
+    elif name == "DateTime":
+        # https://www.graphql-scalars.dev/docs/scalars/date-time
+        return ISODateTime()
+    elif name == "Date":
+        # https://www.graphql-scalars.dev/docs/scalars/date
+        return ISODate()
     else:
         # TODO(cancan101): how do we want to handle other scalars?
         raise ValueError(f"Unknown type: {name}")
