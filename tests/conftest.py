@@ -1,6 +1,7 @@
 from typing import Generator
 
 import pytest
+import responses
 from sqlalchemy import create_engine
 from sqlalchemy.engine import Connection, Engine
 
@@ -21,3 +22,9 @@ def swapi_engine(swapi_graphq_db_url: str) -> Engine:
 def swapi_connection(swapi_engine: Engine) -> Generator[Connection, None, None]:
     with swapi_engine.connect() as connection:
         yield connection
+
+
+@pytest.fixture
+def mocked_responses() -> Generator[responses.RequestsMock, None, None]:
+    with responses.RequestsMock() as rsps:
+        yield rsps
