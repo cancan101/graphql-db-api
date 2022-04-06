@@ -315,7 +315,7 @@ class GraphQLAdapter(Adapter):
         return True
 
     @staticmethod
-    def parse_uri(table: str) -> Tuple[str, List[str]]:
+    def parse_uri(table: str) -> Tuple[str, List[str], Dict[str, str]]:
         parsed = urlparse(table)
         query_string = parse_qs(parsed.query)
 
