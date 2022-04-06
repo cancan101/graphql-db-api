@@ -316,6 +316,9 @@ class GraphQLAdapter(Adapter):
 
     @staticmethod
     def parse_uri(table: str) -> Tuple[str, List[str], Dict[str, str]]:
+        """
+        This will pass in the first n args of __init__ for the Adapter
+        """
         parsed = urlparse(table)
         query_string = parse_qs(parsed.query)
 
