@@ -85,10 +85,19 @@ class APSWGraphQLDialect(APSWDialect):
 
         bearer_token = str(url.password) if url.password else None
 
+        query = extract_query(url)
+        pagination_relay_str = query.get("is_relay")
+        pagination_relay = (
+            query.get(pagination_relay_str, "1") != "0"
+            if pagination_relay_str is None
+            else None
+        )
+
         adapter_kwargs = {
             ADAPTER_NAME: {
                 "graphql_api": self.db_url_to_graphql_api(url),
                 "bearer_token": bearer_token,
+                "pagination_relay": pagination_relay,
             }
         }
 

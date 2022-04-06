@@ -222,6 +222,7 @@ class GraphQLAdapter(Adapter):
         query_args: Dict[str, str],
         graphql_api: str,
         bearer_token: str = None,
+        pagination_relay: bool = None,
     ):
         super().__init__()
 
@@ -233,6 +234,9 @@ class GraphQLAdapter(Adapter):
 
         self.graphql_api = graphql_api
         self.bearer_token = bearer_token
+
+        # For now, default this to True. In the future, we can perhaps guess
+        self.pagination_relay = True if pagination_relay is None else pagination_relay
 
         query_type_and_types_query = """{
   __schema {
@@ -344,25 +348,48 @@ class GraphQLAdapter(Adapter):
         order: List[Tuple[str, RequestedOrder]],
     ) -> Iterator[Dict[str, Any]]:
         fields_str = get_gql_fields(list(self.columns.keys()))
+        query_args_user = dict(self.query_args)
 
-        if self.query_args:
-            variable_str = f"({_get_variable_argument_str(self.query_args)})"
-        else:
-            # Don't generate the () for empty list of args
-            variable_str = ""
+        after = query_args_user.pop("after", None)
 
-        query = f"""query {{
-  {self.table}{variable_str}{{
-    edges{{
-      node{{
-        {fields_str}
-      }}
+        while True:
+            args = dict(query_args_user)
+            if after is not None:
+                args["after"] = after
+
+            if args:
+                variable_str = f"({_get_variable_argument_str(args)})"
+            else:
+                # Don't generate the () for empty list of args
+                variable_str = ""
+
+            if self.pagination_relay:
+                page_info_str = "pageInfo {endCursor hasNextPage}"
+            else:
+                page_info_str = ""
+
+            query = f"""query {{
+    {self.table}{variable_str}{{
+        edges{{
+        node{{
+            {fields_str}
+        }}
+        }}
+        {page_info_str}
     }}
-  }}
-}}"""
-        query_data = self.run_query(query=query)
+    }}"""
+            query_data = self.run_query(query=query)
+            query_data_connection = query_data[self.table]
 
-        for edge in query_data[self.table]["edges"]:
-            node: Dict[str, Any] = edge["node"]
+            for edge in query_data_connection["edges"]:
+                node: Dict[str, Any] = edge["node"]
 
-            yield {c: extract_flattened_value(node, c) for c in self.columns.keys()}
+                yield {c: extract_flattened_value(node, c) for c in self.columns.keys()}
+
+            if self.pagination_relay:
+                page_info = query_data_connection["pageInfo"]
+                if not page_info["hasNextPage"]:
+                    break
+                after = page_info["endCursor"]
+            else:
+                break
