@@ -185,6 +185,7 @@ class GraphQLAdapter(Adapter):
         table: str,
         include: Collection[str],
         graphql_api: str,
+        bearer_token: str = None,
     ):
         super().__init__()
 
@@ -192,6 +193,7 @@ class GraphQLAdapter(Adapter):
         self.include = set(include)
 
         self.graphql_api = graphql_api
+        self.bearer_token = bearer_token
 
         query_type_and_types_query = """{
   __schema {
@@ -220,9 +222,7 @@ class GraphQLAdapter(Adapter):
   }
 }"""
 
-        query_type_and_types = run_query(
-            self.graphql_api, query=query_type_and_types_query
-        )
+        query_type_and_types = self.run_query(query=query_type_and_types_query)
         query_type_and_types_schema = query_type_and_types["__schema"]
         queries_return_fields: List[FieldInfo] = query_type_and_types_schema[
             "queryType"
@@ -291,6 +291,9 @@ class GraphQLAdapter(Adapter):
     def get_columns(self) -> Dict[str, Field]:
         return self.columns
 
+    def run_query(self, query: str) -> Dict[str, Any]:
+        return run_query(self.graphql_api, query=query, bearer_token=self.bearer_token)
+
     def get_data(
         self,
         bounds: Dict[str, Filter],
@@ -307,7 +310,7 @@ class GraphQLAdapter(Adapter):
     }}
   }}
 }}"""
-        query_data = run_query(self.graphql_api, query=query)
+        query_data = self.run_query(query=query)
 
         for edge in query_data[self.table]["edges"]:
             node: Dict[str, Any] = edge["node"]
