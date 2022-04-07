@@ -87,5 +87,10 @@ def test_parse_query_args():
     with pytest.raises(ValueError):
         _parse_query_args({"arg_foo": ["bar", "baz"]})
 
+    # bad int
     with pytest.raises(ValueError):
-        _parse_query_args({"arg_foo": ["bar"], "iarg_foo": ["bar"]})
+        _parse_query_args({"iarg_foo": ["bar"]})
+
+    # dupe
+    with pytest.raises(ValueError):
+        _parse_query_args({"arg_foo": ["bar"], "iarg_foo": [3]})
