@@ -50,6 +50,8 @@ class TypeInfoWithFields(TypeInfo):
     fields: Optional[List[FieldInfo]]
 
 
+QueryArg = Union[str, int]
+
 # -----------------------------------------------------------------------------
 
 
@@ -208,7 +210,7 @@ def _parse_query_arg(k: str, v: List[str]) -> Tuple[str, str]:
     return (k, v[0])
 
 
-def _parse_query_args(query: Dict[str, List[str]]) -> Dict[str, Union[str, int]]:
+def _parse_query_args(query: Dict[str, List[str]]) -> Dict[str, QueryArg]:
     str_args = dict(
         _parse_query_arg(k[4:], v) for k, v in query.items() if k.startswith("arg_")
     )
@@ -227,13 +229,13 @@ def _parse_query_args(query: Dict[str, List[str]]) -> Dict[str, Union[str, int]]
     return dict(str_args, **int_args)
 
 
-def _format_arg(arg: Union[str, int]) -> str:
+def _format_arg(arg: QueryArg) -> str:
     if isinstance(arg, str):
         return f'"{arg}"'
     return str(arg)
 
 
-def _get_variable_argument_str(args: Dict[str, Union[str, int]]) -> str:
+def _get_variable_argument_str(args: Dict[str, QueryArg]) -> str:
     return " ".join(f"{k}: {_format_arg(v)}" for k, v in args.items())
 
 
@@ -247,7 +249,7 @@ class GraphQLAdapter(Adapter):
         self,
         table: str,
         include: Collection[str],
-        query_args: Dict[str, str],
+        query_args: Dict[str, QueryArg],
         graphql_api: str,
         bearer_token: str = None,
         pagination_relay: bool = None,
@@ -347,7 +349,7 @@ class GraphQLAdapter(Adapter):
         return True
 
     @staticmethod
-    def parse_uri(table: str) -> Tuple[str, List[str], Dict[str, str]]:
+    def parse_uri(table: str) -> Tuple[str, List[str], Dict[str, QueryArg]]:
         """
         This will pass in the first n args of __init__ for the Adapter
         """
