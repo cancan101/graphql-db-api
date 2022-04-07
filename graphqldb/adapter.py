@@ -1,5 +1,15 @@
 from collections import defaultdict
-from typing import Any, Collection, Dict, Iterator, List, Optional, Sequence, Tuple
+from typing import (
+    Any,
+    Collection,
+    Dict,
+    Iterator,
+    List,
+    Optional,
+    Sequence,
+    Tuple,
+    Union,
+)
 from urllib.parse import parse_qs, urlparse
 
 from shillelagh.adapters.base import Adapter
@@ -195,18 +205,36 @@ def _parse_query_arg(k: str, v: List[str]) -> Tuple[str, str]:
     if len(v) > 1:
         raise ValueError(f"{k} was specified {len(v)} times")
 
-    return (k[4:], v[0])
+    return (k, v[0])
 
 
-def _parse_query_args(query: Dict[str, List[str]]) -> Dict[str, str]:
-    return dict(
-        _parse_query_arg(k, v) for k, v in query.items() if k.startswith("arg_")
+def _parse_query_args(query: Dict[str, List[str]]) -> Dict[str, Union[str, int]]:
+    str_args = dict(
+        _parse_query_arg(k[4:], v) for k, v in query.items() if k.startswith("arg_")
     )
+    int_args = dict(
+        (k, int(v))
+        for k, v in (
+            _parse_query_arg(k[5:], v)
+            for k, v in query.items()
+            if k.startswith("iarg_")
+        )
+    )
+    overlap = set(str_args.keys()) & set(int_args.keys())
+    if overlap:
+        raise ValueError(f"{overlap} was specified in multiple arg sets")
+
+    return dict(str_args, **int_args)
 
 
-def _get_variable_argument_str(args: Dict[str, str]) -> str:
-    # At some point we will want to handle other types (e.g. ints) here
-    return " ".join(f'{k}: "{v}"' for k, v in args.items())
+def _format_arg(arg: Union[str, int]) -> str:
+    if isinstance(arg, str):
+        return f'"{arg}"'
+    return str(arg)
+
+
+def _get_variable_argument_str(args: Dict[str, Union[str, int]]) -> str:
+    return " ".join(f"{k}: {_format_arg(v)}" for k, v in args.items())
 
 
 # -----------------------------------------------------------------------------

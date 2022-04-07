@@ -73,12 +73,19 @@ def test_parse_gql_type():
 
 
 def test_get_variable_argument_str():
-    assert _get_variable_argument_str({"a": 1}) == 'a: "1"'
-    assert _get_variable_argument_str({"a": 1, "b": "c"}) == 'a: "1" b: "c"'
+    assert _get_variable_argument_str({"a": 1}) == "a: 1"
+    assert _get_variable_argument_str({"a": 1, "b": "c"}) == 'a: 1 b: "c"'
 
 
 def test_parse_query_args():
     assert _parse_query_args({"arg_foo": ["bar"]}) == {"foo": "bar"}
+    assert _parse_query_args({"arg_foo": ["bar"], "iarg_baz": [33]}) == {
+        "foo": "bar",
+        "baz": 33,
+    }
 
     with pytest.raises(ValueError):
         _parse_query_args({"arg_foo": ["bar", "baz"]})
+
+    with pytest.raises(ValueError):
+        _parse_query_args({"arg_foo": ["bar"], "iarg_foo": ["bar"]})

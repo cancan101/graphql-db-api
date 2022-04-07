@@ -33,6 +33,18 @@ def test_query(swapi_connection: Connection) -> None:
     assert len(list(result)) == 82
 
 
+def test_query_paginate(swapi_connection: Connection) -> None:
+    result = swapi_connection.execute(
+        text(
+            """select
+                id
+            from
+                'allPeople?arg_after=YXJyYXljb25uZWN0aW9uOjA=&iarg_first=50'"""
+        )
+    )
+    assert len(list(result)) == 81
+
+
 def test_db_url_to_graphql_api():
     url_http = make_url("graphql://host:123/path?is_https=0")
     assert (
