@@ -30,6 +30,12 @@ def extract_query(url: URL) -> Dict[str, Union[str, Sequence[str]]]:
     return {}
 
 
+def get_last_query(entry: Union[str, Sequence[str]]) -> str:
+    if not isinstance(entry, str):
+        entry = entry[-1]
+    return entry
+
+
 # -----------------------------------------------------------------------------
 
 
@@ -67,7 +73,8 @@ class APSWGraphQLDialect(APSWDialect):
 
     def db_url_to_graphql_api(self, url: URL) -> str:
         query = extract_query(url)
-        is_https = query.get("is_https", "1") != "0"
+        is_https_param = query.get("is_https", "1")
+        is_https = get_last_query(is_https_param) != "0"
         proto = "https" if is_https else "http"
         port_str = "" if url.port is None else f":{url.port}"
         return f"{proto}://{url.host}{port_str}/{url.database}"
@@ -86,10 +93,10 @@ class APSWGraphQLDialect(APSWDialect):
         bearer_token = str(url.password) if url.password else None
 
         query = extract_query(url)
-        pagination_relay_str = query.get("is_relay")
+        pagination_relay_param = query.get("is_relay")
         pagination_relay = (
-            query.get(pagination_relay_str, "1") != "0"
-            if pagination_relay_str is None
+            get_last_query(pagination_relay_param) != "0"
+            if pagination_relay_param is not None
             else None
         )
 
