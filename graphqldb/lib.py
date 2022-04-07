@@ -1,6 +1,35 @@
-from typing import Any, Dict
+import urllib.parse
+from typing import Any, Dict, Sequence, Union
 
 import requests
+from sqlalchemy.engine.url import URL
+
+# -----------------------------------------------------------------------------
+
+
+# Imported from: shillelagh.backends.apsw.dialects.gsheets
+def extract_query(url: URL) -> Dict[str, Union[str, Sequence[str]]]:
+    """
+    Extract the query from the SQLAlchemy URL.
+    """
+    if url.query:
+        return dict(url.query)
+
+    # there's a bug in how SQLAlchemy <1.4 handles URLs without hosts,
+    # putting the query string as the host; handle that case here
+    if url.host and url.host.startswith("?"):
+        return dict(urllib.parse.parse_qsl(url.host[1:]))  # pragma: no cover
+
+    return {}
+
+
+def get_last_query(entry: Union[str, Sequence[str]]) -> str:
+    if not isinstance(entry, str):
+        entry = entry[-1]
+    return entry
+
+
+# -----------------------------------------------------------------------------
 
 
 def run_query(

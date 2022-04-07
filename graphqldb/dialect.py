@@ -1,40 +1,14 @@
-import urllib.parse
-from typing import Any, Dict, List, Sequence, Tuple, Union
+from typing import Any, Dict, List, Tuple
 
 from shillelagh.backends.apsw.dialects.base import APSWDialect
 from sqlalchemy.engine import Connection
 from sqlalchemy.engine.url import URL
 
-from .lib import run_query
+from .lib import extract_query, get_last_query, run_query
 
 # -----------------------------------------------------------------------------
 
 ADAPTER_NAME = "graphql"
-
-# -----------------------------------------------------------------------------
-
-
-# Imported from: shillelagh.backends.apsw.dialects.gsheets
-def extract_query(url: URL) -> Dict[str, Union[str, Sequence[str]]]:
-    """
-    Extract the query from the SQLAlchemy URL.
-    """
-    if url.query:
-        return dict(url.query)
-
-    # there's a bug in how SQLAlchemy <1.4 handles URLs without hosts,
-    # putting the query string as the host; handle that case here
-    if url.host and url.host.startswith("?"):
-        return dict(urllib.parse.parse_qsl(url.host[1:]))  # pragma: no cover
-
-    return {}
-
-
-def get_last_query(entry: Union[str, Sequence[str]]) -> str:
-    if not isinstance(entry, str):
-        entry = entry[-1]
-    return entry
-
 
 # -----------------------------------------------------------------------------
 
