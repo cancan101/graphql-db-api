@@ -1,4 +1,4 @@
-from sqlalchemy import inspect, text
+from sqlalchemy import create_engine, inspect, text
 from sqlalchemy.engine import Connection, Engine, make_url
 
 from graphqldb.dialect import APSWGraphQLDialect
@@ -31,6 +31,31 @@ def test_query(swapi_connection: Connection) -> None:
         )
     )
     assert len(list(result)) == 82
+
+
+def test_query_paginate(swapi_connection: Connection) -> None:
+    result = swapi_connection.execute(
+        text(
+            """select
+                id
+            from
+                'allPeople?arg_after=YXJyYXljb25uZWN0aW9uOjA=&iarg_first=50'"""
+        )
+    )
+    assert len(list(result)) == 81
+
+
+def test_query_no_paginate(swapi_graphq_db_url: str) -> None:
+    with create_engine(f"{swapi_graphq_db_url}?is_relay=0").connect() as connection:
+        result = connection.execute(
+            text(
+                """select
+                    id
+                from
+                    'allPeople?iarg_first=3'"""
+            )
+        )
+        assert len(list(result)) == 3
 
 
 def test_db_url_to_graphql_api():

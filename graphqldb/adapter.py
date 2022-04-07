@@ -1,5 +1,15 @@
 from collections import defaultdict
-from typing import Any, Collection, Dict, Iterator, List, Optional, Sequence, Tuple
+from typing import (
+    Any,
+    Collection,
+    Dict,
+    Iterator,
+    List,
+    Optional,
+    Sequence,
+    Tuple,
+    Union,
+)
 from urllib.parse import parse_qs, urlparse
 
 from shillelagh.adapters.base import Adapter
@@ -39,6 +49,8 @@ class FieldInfo(TypedDict):
 class TypeInfoWithFields(TypeInfo):
     fields: Optional[List[FieldInfo]]
 
+
+QueryArg = Union[str, int]
 
 # -----------------------------------------------------------------------------
 
@@ -195,18 +207,36 @@ def _parse_query_arg(k: str, v: List[str]) -> Tuple[str, str]:
     if len(v) > 1:
         raise ValueError(f"{k} was specified {len(v)} times")
 
-    return (k[4:], v[0])
+    return (k, v[0])
 
 
-def _parse_query_args(query: Dict[str, List[str]]) -> Dict[str, str]:
-    return dict(
-        _parse_query_arg(k, v) for k, v in query.items() if k.startswith("arg_")
+def _parse_query_args(query: Dict[str, List[str]]) -> Dict[str, QueryArg]:
+    str_args = dict(
+        _parse_query_arg(k[4:], v) for k, v in query.items() if k.startswith("arg_")
     )
+    int_args = dict(
+        (k, int(v))
+        for k, v in (
+            _parse_query_arg(k[5:], v)
+            for k, v in query.items()
+            if k.startswith("iarg_")
+        )
+    )
+    overlap = set(str_args.keys()) & set(int_args.keys())
+    if overlap:
+        raise ValueError(f"{overlap} was specified in multiple arg sets")
+
+    return dict(str_args, **int_args)
 
 
-def _get_variable_argument_str(args: Dict[str, str]) -> str:
-    # At some point we will want to handle other types (e.g. ints) here
-    return " ".join(f'{k}: "{v}"' for k, v in args.items())
+def _format_arg(arg: QueryArg) -> str:
+    if isinstance(arg, str):
+        return f'"{arg}"'
+    return str(arg)
+
+
+def _get_variable_argument_str(args: Dict[str, QueryArg]) -> str:
+    return " ".join(f"{k}: {_format_arg(v)}" for k, v in args.items())
 
 
 # -----------------------------------------------------------------------------
@@ -219,9 +249,10 @@ class GraphQLAdapter(Adapter):
         self,
         table: str,
         include: Collection[str],
-        query_args: Dict[str, str],
+        query_args: Dict[str, QueryArg],
         graphql_api: str,
         bearer_token: str = None,
+        pagination_relay: bool = None,
     ):
         super().__init__()
 
@@ -233,6 +264,9 @@ class GraphQLAdapter(Adapter):
 
         self.graphql_api = graphql_api
         self.bearer_token = bearer_token
+
+        # For now, default this to True. In the future, we can perhaps guess
+        self.pagination_relay = True if pagination_relay is None else pagination_relay
 
         query_type_and_types_query = """{
   __schema {
@@ -315,7 +349,7 @@ class GraphQLAdapter(Adapter):
         return True
 
     @staticmethod
-    def parse_uri(table: str) -> Tuple[str, List[str], Dict[str, str]]:
+    def parse_uri(table: str) -> Tuple[str, List[str], Dict[str, QueryArg]]:
         """
         This will pass in the first n args of __init__ for the Adapter
         """
@@ -344,25 +378,48 @@ class GraphQLAdapter(Adapter):
         order: List[Tuple[str, RequestedOrder]],
     ) -> Iterator[Dict[str, Any]]:
         fields_str = get_gql_fields(list(self.columns.keys()))
+        query_args_user = dict(self.query_args)
 
-        if self.query_args:
-            variable_str = f"({_get_variable_argument_str(self.query_args)})"
-        else:
-            # Don't generate the () for empty list of args
-            variable_str = ""
+        after = query_args_user.pop("after", None)
 
-        query = f"""query {{
-  {self.table}{variable_str}{{
-    edges{{
-      node{{
-        {fields_str}
-      }}
+        while True:
+            args = dict(query_args_user)
+            if after is not None:
+                args["after"] = after
+
+            if args:
+                variable_str = f"({_get_variable_argument_str(args)})"
+            else:
+                # Don't generate the () for empty list of args
+                variable_str = ""
+
+            if self.pagination_relay:
+                page_info_str = "pageInfo {endCursor hasNextPage}"
+            else:
+                page_info_str = ""
+
+            query = f"""query {{
+    {self.table}{variable_str}{{
+        edges{{
+        node{{
+            {fields_str}
+        }}
+        }}
+        {page_info_str}
     }}
-  }}
-}}"""
-        query_data = self.run_query(query=query)
+    }}"""
+            query_data = self.run_query(query=query)
+            query_data_connection = query_data[self.table]
 
-        for edge in query_data[self.table]["edges"]:
-            node: Dict[str, Any] = edge["node"]
+            for edge in query_data_connection["edges"]:
+                node: Dict[str, Any] = edge["node"]
 
-            yield {c: extract_flattened_value(node, c) for c in self.columns.keys()}
+                yield {c: extract_flattened_value(node, c) for c in self.columns.keys()}
+
+            if self.pagination_relay:
+                page_info = query_data_connection["pageInfo"]
+                if not page_info["hasNextPage"]:
+                    break
+                after = page_info["endCursor"]
+            else:
+                break

@@ -40,7 +40,9 @@ SystemError: <method 'execute' of 'apsw.Cursor' objects> returned NULL without s
 * [x] Path traversal (basic)
 * [ ] Path traversal (basic + nested)
 * [ ] Path traversal (list / connection)
-* [ ] Passing Headers (e.g. Auth)
+* [x] Bearer Tokens in `Authorization` Header
+* [ ] Advanced Auth (e.g. with token refresh)
+* [ ] Passing Headers (e.g. Auth in other locations)
 * [ ] Filtering
 * [ ] Sorting
-* [ ] Pagination
+* [x] Relay Pagination

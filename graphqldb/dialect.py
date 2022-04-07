@@ -1,34 +1,14 @@
-import urllib.parse
-from typing import Any, Dict, List, Sequence, Tuple, Union
+from typing import Any, Dict, List, Tuple
 
 from shillelagh.backends.apsw.dialects.base import APSWDialect
 from sqlalchemy.engine import Connection
 from sqlalchemy.engine.url import URL
 
-from .lib import run_query
+from .lib import extract_query, get_last_query, run_query
 
 # -----------------------------------------------------------------------------
 
 ADAPTER_NAME = "graphql"
-
-# -----------------------------------------------------------------------------
-
-
-# Imported from: shillelagh.backends.apsw.dialects.gsheets
-def extract_query(url: URL) -> Dict[str, Union[str, Sequence[str]]]:
-    """
-    Extract the query from the SQLAlchemy URL.
-    """
-    if url.query:
-        return dict(url.query)
-
-    # there's a bug in how SQLAlchemy <1.4 handles URLs without hosts,
-    # putting the query string as the host; handle that case here
-    if url.host and url.host.startswith("?"):
-        return dict(urllib.parse.parse_qsl(url.host[1:]))  # pragma: no cover
-
-    return {}
-
 
 # -----------------------------------------------------------------------------
 
@@ -67,7 +47,8 @@ class APSWGraphQLDialect(APSWDialect):
 
     def db_url_to_graphql_api(self, url: URL) -> str:
         query = extract_query(url)
-        is_https = query.get("is_https", "1") != "0"
+        is_https_param = query.get("is_https", "1")
+        is_https = get_last_query(is_https_param) != "0"
         proto = "https" if is_https else "http"
         port_str = "" if url.port is None else f":{url.port}"
         return f"{proto}://{url.host}{port_str}/{url.database}"
@@ -85,10 +66,19 @@ class APSWGraphQLDialect(APSWDialect):
 
         bearer_token = str(url.password) if url.password else None
 
+        query = extract_query(url)
+        pagination_relay_param = query.get("is_relay")
+        pagination_relay = (
+            get_last_query(pagination_relay_param) != "0"
+            if pagination_relay_param is not None
+            else None
+        )
+
         adapter_kwargs = {
             ADAPTER_NAME: {
                 "graphql_api": self.db_url_to_graphql_api(url),
                 "bearer_token": bearer_token,
+                "pagination_relay": pagination_relay,
             }
         }
 
