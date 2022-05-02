@@ -154,7 +154,7 @@ requests==2.27.1
     #   shillelagh
 responses==0.20.0
     # via -r requirements-dev.in
-shillelagh==1.0.10
+shillelagh==1.0.12
     # via -r requirements.txt
 six==1.16.0
     # via
