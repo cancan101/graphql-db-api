@@ -111,7 +111,7 @@ pbr==5.8.1
     # via stevedore
 pep517==0.12.0
     # via pip-tools
-pip-tools==6.5.1
+pip-tools==6.6.1
     # via -r requirements-dev.in
 platformdirs==2.5.1
     # via
