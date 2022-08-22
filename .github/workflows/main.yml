@@ -43,7 +43,7 @@ jobs:
           pip install "apsw==3.36.0.post1"
           
       - name: Set up mypy cache
-        uses: actions/cache@v3.0.1
+        uses: actions/cache@v3.0.8
         with:
           path: .mypy_cache
           key: mypy1-${{ hashFiles('./graphqldb/**/*.py') }}-${{ hashFiles('./tests/**/*.py') }}
