@@ -376,6 +376,7 @@ class GraphQLAdapter(Adapter):
         self,
         bounds: Dict[str, Filter],
         order: List[Tuple[str, RequestedOrder]],
+        **kwargs: Any,
     ) -> Iterator[Dict[str, Any]]:
         fields_str = get_gql_fields(list(self.columns.keys()))
         query_args_user = dict(self.query_args)
