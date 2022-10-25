@@ -36,6 +36,8 @@ coverage[toml]==6.3.2
     # via pytest-cov
 distlib==0.3.4
     # via virtualenv
+exceptiongroup==1.0.0rc9
+    # via pytest
 filelock==3.6.0
     # via virtualenv
 flake8==4.0.1
@@ -121,8 +123,6 @@ pluggy==1.0.0
     # via pytest
 pre-commit==2.18.1
     # via -r requirements-dev.in
-py==1.11.0
-    # via pytest
 pycodestyle==2.8.0
     # via
     #   flake8
@@ -133,7 +133,7 @@ pyflakes==2.4.0
     # via flake8
 pyparsing==3.0.9
     # via packaging
-pytest==7.1.1
+pytest==7.2.0
     # via
     #   -r requirements-dev.in
     #   pytest-cov
