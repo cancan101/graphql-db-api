@@ -115,7 +115,7 @@ pathspec==0.9.0
     # via black
 pbr==5.11.0
     # via stevedore
-pep517==0.12.0
+pep517==0.13.0
     # via build
 pip-tools==6.9.0
     # via -r requirements-dev.in
