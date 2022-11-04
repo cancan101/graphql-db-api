@@ -36,12 +36,6 @@ jobs:
         run: |
           flake8 .
 
-      # Currently the version of apsw specified in requirements.txt file is quite old
-      # https://github.com/rogerbinns/apsw/issues/310
-      - name: Fix dependencies
-        run: |
-          pip install "apsw==3.36.0.post1"
-
       - name: Set up mypy cache
         uses: actions/cache@v3.0.11
         with:
