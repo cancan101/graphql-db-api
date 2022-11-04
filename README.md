@@ -28,6 +28,10 @@ with engine.connect() as connection:
     for row in connection.execute(text("select name, homeworld__name from 'allPeople?include=homeworld'")):
         print(row)
 ```
+## Superset support
+
+In order to use with Superset, install this package and then use the `graphql` protocol in the SQLAlchemy URI like: `graphql://swapi-graphql.netlify.app/.netlify/functions/index`. We install a [`db_engine_spec`](https://github.com/cancan101/graphql-db-api/blob/main/graphqldb/db_engine_specs.py) so Superset should recognize the driver.
+
 
 ## Installation
 I was having issues with `apsw-3.9.2.post1` (the newest version of `apsw` that would install for me from PyPI) and ended up needing to follow [the instructions here](https://shillelagh.readthedocs.io/en/latest/install.html) to build / install `apsw` from source. There is an [open ticket on the APSW project](https://github.com/rogerbinns/apsw/issues/310) to provide newer wheels. The issue might be triggered if the table name needs escaping and the error looked like:
