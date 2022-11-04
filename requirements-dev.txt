@@ -152,7 +152,7 @@ requests==2.28.1
     #   -r requirements.txt
     #   responses
     #   shillelagh
-responses==0.22.0
+responses==0.20.0
     # via -r requirements-dev.in
 shillelagh==1.1.2
     # via -r requirements.txt
