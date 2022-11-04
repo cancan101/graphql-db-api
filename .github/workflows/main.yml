@@ -20,8 +20,8 @@ jobs:
         with:
           # Semantic version range syntax or exact version of a Python version
           python-version: "3.9"
-          cache: 'pip'
-          cache-dependency-path: 'requirements-dev.txt'
+          cache: "pip"
+          cache-dependency-path: "requirements-dev.txt"
 
       - name: Install dependencies
         run: |
@@ -30,18 +30,12 @@ jobs:
 
       - name: Test with black
         run: |
-          black . --check --target-version py37
+          black . --check
 
       - name: Test with flake8
         run: |
           flake8 .
 
-      # Currently the version of apsw specified in requirements.txt file is quite old
-      # https://github.com/rogerbinns/apsw/issues/310
-      - name: Fix dependencies
-        run: |
-          pip install "apsw==3.36.0.post1"
-          
       - name: Set up mypy cache
         uses: actions/cache@v3.0.11
         with:
@@ -51,7 +45,7 @@ jobs:
 
       - name: Test with mypy
         run: |
-          mypy .          
+          mypy .
 
       - name: Install self
         run: |
