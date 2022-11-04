@@ -29,7 +29,7 @@ class BaseCommand(Command):
     @staticmethod
     def status(s: str) -> None:
         """Prints things in bold."""
-        print("\033[1m{0}\033[0m".format(s))  # noqa: T001
+        print("\033[1m{0}\033[0m".format(s))  # noqa: T201
 
     def system(self, command: str) -> None:
         os.system(command)  # noqa: S605

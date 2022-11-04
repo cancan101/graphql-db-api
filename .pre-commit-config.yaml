@@ -21,6 +21,6 @@ repos:
             flake8-datetimez==20.10.0,
             flake8-debugger==4.1.2,
             # No need for flake8-isort
-            flake8-print==4.0.0,
+            flake8-print==5.0.0,
             flake8-return==1.1.3,
           ]
