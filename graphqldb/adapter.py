@@ -21,6 +21,7 @@ from shillelagh.fields import (
     Integer,
     ISODate,
     ISODateTime,
+    ISOTime,
     String,
 )
 from shillelagh.typing import RequestedOrder
@@ -77,6 +78,9 @@ def parse_gql_type(type_info: TypeInfo) -> Field:
     elif name == "Date":
         # https://www.graphql-scalars.dev/docs/scalars/date
         return ISODate()
+    elif name == "Time":
+        # https://www.graphql-scalars.dev/docs/scalars/time
+        return ISOTime()
     else:
         # TODO(cancan101): how do we want to handle other scalars?
         raise ValueError(f"Unknown type: {name}")
