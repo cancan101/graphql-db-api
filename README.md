@@ -28,6 +28,10 @@ with engine.connect() as connection:
     for row in connection.execute(text("select name, homeworld__name from 'allPeople?include=homeworld'")):
         print(row)
 ```
+## Superset support
+
+In order to use with Superset, install this package and then use the `graphql` protocol in the SQLAlchemy URI like: `graphql://swapi-graphql.netlify.app/.netlify/functions/index`. We install a [`db_engine_spec`](https://github.com/cancan101/graphql-db-api/blob/main/graphqldb/db_engine_specs.py) so Superset should recognize the driver.
+
 
 ## Roadmap
 * [ ] Non-Connections top level
