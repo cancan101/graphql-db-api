@@ -14,7 +14,7 @@ greenlet==2.0.0.post0
     # via sqlalchemy
 idna==3.4
     # via requests
-mypy==0.982
+mypy==0.990
     # via sqlalchemy
 mypy-extensions==0.4.3
     # via mypy
@@ -34,8 +34,6 @@ sqlalchemy[mypy]==1.4.42
     #   shillelagh
 sqlalchemy2-stubs==0.0.2a29
     # via sqlalchemy
-tomli==2.0.1
-    # via mypy
 typing-extensions==4.4.0
     # via
     #   -r requirements.in
