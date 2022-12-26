@@ -37,7 +37,7 @@ jobs:
           flake8 .
 
       - name: Set up mypy cache
-        uses: actions/cache@v3.0.11
+        uses: actions/cache@v3.2.1
         with:
           path: .mypy_cache
           key: mypy1-${{ hashFiles('./graphqldb/**/*.py') }}-${{ hashFiles('./tests/**/*.py') }}
