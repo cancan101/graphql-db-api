@@ -72,7 +72,7 @@ gitdb==4.0.9
     # via gitpython
 gitpython==3.1.29
     # via bandit
-greenlet==2.0.0.post0
+greenlet==2.0.1
     # via
     #   -r requirements.txt
     #   sqlalchemy
