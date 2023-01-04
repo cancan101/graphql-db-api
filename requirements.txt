@@ -14,7 +14,7 @@ greenlet==2.0.0.post0
     # via sqlalchemy
 idna==3.4
     # via requests
-mypy==0.982
+mypy==0.991
     # via sqlalchemy
 mypy-extensions==0.4.3
     # via mypy
