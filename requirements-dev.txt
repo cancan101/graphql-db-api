@@ -168,7 +168,7 @@ sqlalchemy2-stubs==0.0.2a29
     # via
     #   -r requirements.txt
     #   sqlalchemy
-stevedore==4.1.0
+stevedore==4.1.1
     # via bandit
 toml==0.10.2
     # via pre-commit
