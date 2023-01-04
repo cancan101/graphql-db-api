@@ -176,7 +176,7 @@ tomli==2.0.1
     # via flake8-black
 types-requests==2.28.11.2
     # via -r requirements-dev.in
-types-setuptools==65.5.0.2
+types-setuptools==65.6.0.2
     # via -r requirements-dev.in
 types-urllib3==1.26.25.1
     # via types-requests
