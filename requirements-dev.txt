@@ -106,7 +106,7 @@ packaging==21.3
     # via
     #   build
     #   pytest
-pathspec==0.10.1
+pathspec==0.10.3
     # via black
 pbr==5.11.0
     # via stevedore
