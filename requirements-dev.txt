@@ -178,7 +178,7 @@ types-requests==2.28.11.2
     # via -r requirements-dev.in
 types-setuptools==65.6.0.2
     # via -r requirements-dev.in
-types-urllib3==1.26.25.1
+types-urllib3==1.26.25.4
     # via types-requests
 typing-extensions==4.4.0
     # via
