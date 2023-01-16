@@ -54,7 +54,7 @@ flake8-bandit==4.1.1
     # via -r requirements-dev.in
 flake8-black==0.3.3
     # via -r requirements-dev.in
-flake8-bugbear==22.12.6
+flake8-bugbear==23.1.14
     # via -r requirements-dev.in
 flake8-datetimez==20.10.0
     # via -r requirements-dev.in
