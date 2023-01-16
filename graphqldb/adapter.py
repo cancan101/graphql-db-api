@@ -91,7 +91,7 @@ def get_type_entries(
     *,
     data_types: Dict[str, TypeInfoWithFields],
     include: Collection[str],
-    path: List[str] = None,
+    path: Optional[List[str]] = None,
 ) -> Dict[str, Field]:
     path = path or []
 
@@ -188,7 +188,7 @@ def extract_flattened_value(node: Dict[str, Any], field_name: str) -> Any:
 
 def get_gql_fields(column_names: Sequence[str]) -> str:
     # TODO(cancan101): actually nest this
-    def get_field_str(fields: List[str], root: str = None) -> str:
+    def get_field_str(fields: List[str], root: Optional[str] = None) -> str:
         ret = " ".join(fields)
         if root is not None:
             ret = f"{root} {{{ret}}}"
@@ -255,8 +255,8 @@ class GraphQLAdapter(Adapter):
         include: Collection[str],
         query_args: Dict[str, QueryArg],
         graphql_api: str,
-        bearer_token: str = None,
-        pagination_relay: bool = None,
+        bearer_token: Optional[str] = None,
+        pagination_relay: Optional[bool] = None,
     ):
         super().__init__()
 

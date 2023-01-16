@@ -1,5 +1,5 @@
 import urllib.parse
-from typing import Any, Dict, Sequence, Union
+from typing import Any, Dict, Optional, Sequence, Union
 
 import requests
 from sqlalchemy.engine.url import URL
@@ -36,7 +36,7 @@ def run_query(
     graphql_api: str,
     *,
     query: str,
-    bearer_token: str = None,
+    bearer_token: Optional[str] = None,
 ) -> Dict[str, Any]:
     headers: Dict[str, Any] = {}
     if bearer_token:

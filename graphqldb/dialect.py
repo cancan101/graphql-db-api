@@ -1,4 +1,4 @@
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 from shillelagh.backends.apsw.dialects.base import APSWDialect
 from sqlalchemy.engine import Connection
@@ -24,7 +24,7 @@ class APSWGraphQLDialect(APSWDialect):
         super().__init__(safe=True, adapters=[ADAPTER_NAME], **kwargs)
 
     def get_table_names(
-        self, connection: Connection, schema: str = None, **kwargs: Any
+        self, connection: Connection, schema: Optional[str] = None, **kwargs: Any
     ) -> List[str]:
         url = connection.engine.url
         graphql_api = self.db_url_to_graphql_api(url)
