@@ -4,7 +4,7 @@
 #
 #    pip-compile requirements.in
 #
-apsw==3.39.4.0
+apsw==3.40.1.0
     # via shillelagh
 certifi==2022.12.7
     # via requests
