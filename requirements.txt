@@ -32,7 +32,7 @@ sqlalchemy[mypy]==1.4.42
     # via
     #   -r requirements.in
     #   shillelagh
-sqlalchemy2-stubs==0.0.2a29
+sqlalchemy2-stubs==0.0.2a31
     # via sqlalchemy
 typing-extensions==4.4.0
     # via
