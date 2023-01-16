@@ -10,7 +10,7 @@ certifi==2022.12.7
     # via requests
 charset-normalizer==2.1.1
     # via requests
-greenlet==2.0.0.post0
+greenlet==2.0.1
     # via sqlalchemy
 idna==3.4
     # via requests
