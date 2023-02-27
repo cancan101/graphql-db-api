@@ -8,7 +8,7 @@ apsw==3.40.1.0
     # via shillelagh
 certifi==2022.12.7
     # via requests
-charset-normalizer==2.1.1
+charset-normalizer==3.0.1
     # via requests
 greenlet==2.0.1
     # via sqlalchemy
