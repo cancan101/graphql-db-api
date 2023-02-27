@@ -172,7 +172,7 @@ toml==0.10.2
     # via pre-commit
 tomli==2.0.1
     # via flake8-black
-types-requests==2.28.11.7
+types-requests==2.28.11.15
     # via -r requirements-dev.in
 types-setuptools==65.6.0.2
     # via -r requirements-dev.in
