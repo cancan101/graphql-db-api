@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, inspect, text
+from sqlalchemy import inspect, text
 from sqlalchemy.engine import Connection, Engine, make_url
 
 from graphqldb.dialect import APSWGraphQLDialect
@@ -8,17 +8,28 @@ def test_create_engine(swapi_engine: Engine) -> None:
     pass
 
 
-def test_get_table_names(swapi_connection: Connection) -> None:
+def test_get_table_names_connections(swapi_connection: Connection) -> None:
     insp = inspect(swapi_connection)
 
     tables = insp.get_table_names()
 
+    # TODO(cancan101): This should also test for tables shouldn't be here
     assert "allPlanets" in tables
     assert "allPeople" in tables
     assert "allSpecies" in tables
 
 
-def test_query(swapi_connection: Connection) -> None:
+def test_get_table_names_lists(petstore_connection: Connection) -> None:
+    insp = inspect(petstore_connection)
+
+    tables = insp.get_table_names()
+
+    # TODO(cancan101): This should also test for tables shouldn't be here
+    assert "allPets" in tables
+    assert "allCustomers" in tables
+
+
+def test_query_connection(swapi_connection: Connection) -> None:
     result = swapi_connection.execute(
         text(
             """select
@@ -45,17 +56,28 @@ def test_query_paginate(swapi_connection: Connection) -> None:
     assert len(list(result)) == 81
 
 
-def test_query_no_paginate(swapi_graphq_db_url: str) -> None:
-    with create_engine(f"{swapi_graphq_db_url}?is_relay=0").connect() as connection:
-        result = connection.execute(
-            text(
-                """select
-                    id
-                from
-                    'allPeople?iarg_first=3'"""
-            )
+def test_query_no_paginate(swapi_connection_no_relay: Connection) -> None:
+    result = swapi_connection_no_relay.execute(
+        text(
+            """select
+                id
+            from
+                'allPeople?iarg_first=3'"""
         )
-        assert len(list(result)) == 3
+    )
+    assert len(list(result)) == 3
+
+
+def test_query_no_paginate_XXXX(petstore_connection: Connection) -> None:
+    result = petstore_connection.execute(
+        text(
+            """select
+                id
+            from
+                'allPets?is_connection=0'"""
+        )
+    )
+    assert len(list(result)) == 25
 
 
 def test_db_url_to_graphql_api():
