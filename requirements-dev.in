@@ -3,7 +3,9 @@
 black
 flake8
 flake8-bandit
-flake8-black  # this is for local work; not used by pre-commit
+# this is for local work; not used by pre-commit
+# We don't really need this at all as we can run black directly
+# flake8-black
 flake8-bugbear
 flake8-datetimez
 flake8-debugger
