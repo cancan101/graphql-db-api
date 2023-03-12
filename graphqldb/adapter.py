@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from collections import defaultdict
 from typing import (
     Any,
@@ -37,7 +39,7 @@ class MaybeNamed(TypedDict):
 
 
 class TypeInfo(MaybeNamed):
-    ofType: Optional[MaybeNamed]
+    ofType: Optional[TypeInfo]
     # technically an enum:
     kind: str
 
@@ -289,31 +291,31 @@ class GraphQLAdapter(Adapter):
 
         if self.is_connection:
             query_type_and_types_query = """{
-    __schema {
-        queryType {
-        fields {
-            name
-            type {
-            name
-            }
-        }
-        }
-        types {
+  __schema {
+    queryType {
+      fields {
         name
-        kind
-        fields {
-            name
-            type {
-            name
-            kind
-            ofType {
-                name
-            }
-            }
+        type {
+          name
         }
-        }
+      }
     }
-    }"""
+    types {
+      name
+      kind
+      fields {
+        name
+        type {
+          name
+          kind
+          ofType {
+            name
+          }
+        }
+      }
+    }
+  }
+}"""
         else:
             query_type_and_types_query = """{
   __schema {
@@ -323,13 +325,13 @@ class GraphQLAdapter(Adapter):
         type {
           name
           kind
-          ofType{
+          ofType {
             name
             kind
-             ofType{
+            ofType {
               kind
               name
-              ofType{
+              ofType {
                 name
               }
             }
@@ -397,7 +399,21 @@ class GraphQLAdapter(Adapter):
 
         else:
             # We are assuming it is NonNull of List of NonNull of item
-            node_type_name = type_entry["ofType"]["ofType"]["ofType"]["name"]
+            list_type = type_entry["ofType"]
+            if list_type is None:
+                raise ValueError("Unable to resolve list_type")
+
+            item_container_type = list_type["ofType"]
+            if item_container_type is None:
+                raise ValueError("Unable to resolve item_container_type")
+
+            node_type = item_container_type["ofType"]
+            if node_type is None:
+                raise ValueError("Unable to resolve node_type")
+
+            node_type_name = node_type["name"]
+            if node_type_name is None:
+                raise ValueError("Unable to resolve node_type_name")
 
         node_fields = data_types[node_type_name]["fields"]
         if node_fields is None:
@@ -417,7 +433,7 @@ class GraphQLAdapter(Adapter):
         return True
 
     @staticmethod
-    def parse_uri(table: str) -> Tuple[str, List[str], Dict[str, QueryArg]]:
+    def parse_uri(table: str) -> Tuple[str, List[str], Dict[str, QueryArg], bool]:
         """
         This will pass in the first n args of __init__ for the Adapter
         """
