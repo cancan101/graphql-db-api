@@ -16,6 +16,8 @@ engine = create_engine('graphql://host:port/path?is_https=0')
 
 ### Example Usage
 
+#### Querying Connections
+
 ```python
 from sqlalchemy import create_engine
 from sqlalchemy import text
@@ -27,6 +29,19 @@ with engine.connect() as connection:
     # Demonstration of requesting nested resource of homeworld
     # and then selecting fields from it
     for row in connection.execute(text("select name, homeworld__name from 'allPeople?include=homeworld'")):
+        print(row)
+```
+
+#### Querying Lists
+
+```python
+from sqlalchemy import create_engine
+from sqlalchemy import text
+
+engine = create_engine('graphql://pet-library.moonhighway.com/')
+
+with engine.connect() as connection:
+    for row in connection.execute(text("select id, name from 'allPets?is_connection=0'")):
         print(row)
 ```
 
