@@ -11,6 +11,7 @@ from typing import (
     Sequence,
     Tuple,
     Union,
+    cast,
 )
 from urllib.parse import parse_qs, urlparse
 
@@ -39,7 +40,7 @@ class MaybeNamed(TypedDict):
 
 
 class TypeInfo(MaybeNamed):
-    ofType: Optional[TypeInfo]
+    ofType: Optional[Union[TypeInfo, MaybeNamed]]
     # technically an enum:
     kind: str
 
@@ -403,9 +404,15 @@ class GraphQLAdapter(Adapter):
             if list_type is None:
                 raise ValueError("Unable to resolve list_type")
 
+            # TODO(cancan101): put this info into type system
+            list_type = cast(TypeInfo, list_type)
+
             item_container_type = list_type["ofType"]
             if item_container_type is None:
                 raise ValueError("Unable to resolve item_container_type")
+
+            # TODO(cancan101): put this info into type system
+            item_container_type = cast(TypeInfo, item_container_type)
 
             node_type = item_container_type["ofType"]
             if node_type is None:
