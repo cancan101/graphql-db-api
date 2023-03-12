@@ -52,7 +52,7 @@ flake8==5.0.4
     #   flake8-print
 flake8-bandit==4.1.1
     # via -r requirements-dev.in
-flake8-black==0.3.3
+flake8-black==0.3.6
     # via -r requirements-dev.in
 flake8-bugbear==22.12.6
     # via -r requirements-dev.in
@@ -169,8 +169,6 @@ sqlalchemy2-stubs==0.0.2a31
     #   sqlalchemy
 stevedore==4.1.1
     # via bandit
-tomli==2.0.1
-    # via flake8-black
 types-requests==2.28.11.15
     # via -r requirements-dev.in
 types-setuptools==67.5.0.0
