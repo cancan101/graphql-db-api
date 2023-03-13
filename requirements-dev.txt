@@ -158,14 +158,12 @@ sqlalchemy[mypy]==1.4.42
     # via
     #   -r requirements.txt
     #   shillelagh
-sqlalchemy2-stubs==0.0.2a31
+sqlalchemy2-stubs==0.0.2a32
     # via
     #   -r requirements.txt
     #   sqlalchemy
 stevedore==4.1.1
     # via bandit
-tomli==2.0.1
-    # via -r requirements.txt
 types-requests==2.28.11.15
     # via -r requirements-dev.in
 types-setuptools==67.5.0.0
