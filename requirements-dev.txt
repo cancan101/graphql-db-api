@@ -162,7 +162,7 @@ sqlalchemy2-stubs==0.0.2a31
     # via
     #   -r requirements.txt
     #   sqlalchemy
-stevedore==4.1.1
+stevedore==5.0.0
     # via bandit
 tomli==2.0.1
     # via -r requirements.txt
