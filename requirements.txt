@@ -28,19 +28,15 @@ shillelagh==1.1.2
     # via -r requirements.in
 six==1.16.0
     # via python-dateutil
-sqlalchemy[mypy]==1.4.42
+sqlalchemy[mypy]==2.0.8
     # via
     #   -r requirements.in
     #   shillelagh
-sqlalchemy2-stubs==0.0.2a31
-    # via sqlalchemy
-tomli==2.0.1
-    # via mypy
 typing-extensions==4.4.0
     # via
     #   -r requirements.in
     #   mypy
     #   shillelagh
-    #   sqlalchemy2-stubs
+    #   sqlalchemy
 urllib3==1.26.12
     # via requests
