@@ -8,7 +8,7 @@ apsw==3.40.1.0
     # via
     #   -r requirements.txt
     #   shillelagh
-attrs==22.1.0
+attrs==23.1.0
     # via
     #   flake8-bugbear
     #   pytest
