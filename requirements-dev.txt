@@ -90,7 +90,7 @@ mypy==0.991
     #   -r requirements-dev.in
     #   -r requirements.txt
     #   sqlalchemy
-mypy-extensions==0.4.3
+mypy-extensions==1.0.0
     # via
     #   -r requirements.txt
     #   black
