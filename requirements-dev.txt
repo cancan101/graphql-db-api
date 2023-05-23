@@ -158,7 +158,7 @@ sqlalchemy[mypy]==1.4.42
     # via
     #   -r requirements.txt
     #   shillelagh
-sqlalchemy2-stubs==0.0.2a31
+sqlalchemy2-stubs==0.0.2a34
     # via
     #   -r requirements.txt
     #   sqlalchemy
