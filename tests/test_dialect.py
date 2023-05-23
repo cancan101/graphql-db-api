@@ -57,6 +57,7 @@ def test_query_paginate(swapi_connection: Connection) -> None:
 
 
 def test_query_no_paginate(swapi_connection_no_relay: Connection) -> None:
+    """Test querying with no pagination enabled."""
     result = swapi_connection_no_relay.execute(
         text(
             """select
@@ -68,7 +69,8 @@ def test_query_no_paginate(swapi_connection_no_relay: Connection) -> None:
     assert len(list(result)) == 3
 
 
-def test_query_no_paginate_XXXX(petstore_connection: Connection) -> None:
+def test_query_non_connection(petstore_connection: Connection) -> None:
+    """Test querying against a non-connection (i.e. a List)."""
     result = petstore_connection.execute(
         text(
             """select
