@@ -105,7 +105,7 @@ packaging==23.1
     #   build
     #   pytest
     #   shillelagh
-pathspec==0.11.0
+pathspec==0.11.1
     # via black
 pbr==5.11.0
     # via stevedore
