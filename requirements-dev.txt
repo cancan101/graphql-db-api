@@ -36,11 +36,9 @@ coverage[toml]==6.5.0
     # via pytest-cov
 distlib==0.3.6
     # via virtualenv
-exceptiongroup==1.1.1
-    # via pytest
 filelock==3.12.0
     # via virtualenv
-flake8==5.0.4
+flake8==6.0.0
     # via
     #   -r requirements-dev.in
     #   flake8-bandit
@@ -121,12 +119,12 @@ pluggy==1.0.0
     # via pytest
 pre-commit==3.1.1
     # via -r requirements-dev.in
-pycodestyle==2.9.1
+pycodestyle==2.10.0
     # via
     #   flake8
     #   flake8-debugger
     #   flake8-print
-pyflakes==2.5.0
+pyflakes==3.0.1
     # via flake8
 pytest==7.2.0
     # via
@@ -166,14 +164,6 @@ sqlalchemy2-stubs==0.0.2a34
     # via sqlalchemy
 stevedore==5.1.0
     # via bandit
-tomli==2.0.1
-    # via
-    #   black
-    #   build
-    #   coverage
-    #   mypy
-    #   pep517
-    #   pytest
 types-requests==2.28.11.15
     # via -r requirements-dev.in
 types-setuptools==67.8.0.0
