@@ -19,5 +19,6 @@ pre-commit
 pytest
 pytest-cov
 responses
+sqlalchemy[mypy]
 types-requests
 types-setuptools
