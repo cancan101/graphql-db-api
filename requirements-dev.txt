@@ -67,9 +67,10 @@ gitdb==4.0.10
     # via gitpython
 gitpython==3.1.30
     # via bandit
-greenlet==2.0.1
+greenlet==2.0.2
     # via
     #   -r requirements.txt
+    #   shillelagh
     #   sqlalchemy
 identify==2.5.24
     # via pre-commit
@@ -97,11 +98,13 @@ mypy-extensions==1.0.0
     #   mypy
 nodeenv==1.7.0
     # via pre-commit
-packaging==23.0
+packaging==23.1
     # via
+    #   -r requirements.txt
     #   black
     #   build
     #   pytest
+    #   shillelagh
 pathspec==0.11.0
     # via black
 pbr==5.11.0
@@ -146,7 +149,7 @@ requests==2.31.0
     #   shillelagh
 responses==0.20.0
     # via -r requirements-dev.in
-shillelagh==1.1.2
+shillelagh==1.2.4
     # via -r requirements.txt
 six==1.16.0
     # via
