@@ -1,8 +1,10 @@
-from typing import Any, Dict, List, Optional, Tuple
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple
 
 from shillelagh.backends.apsw.dialects.base import APSWDialect
-from sqlalchemy.engine import Connection
-from sqlalchemy.engine.url import URL
+
+if TYPE_CHECKING:
+    from sqlalchemy.engine import Connection
+    from sqlalchemy.engine.url import URL
 
 from .lib import extract_query, get_last_query, run_query
 

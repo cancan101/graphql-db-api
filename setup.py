@@ -111,7 +111,6 @@ setup(
     },
     install_requires=(
         "shillelagh >= 1.2.0",
-        "sqlalchemy >= 1.4.0",
         "requests >= 2.31.0",
         "typing-extensions",
     ),

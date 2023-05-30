@@ -1,8 +1,10 @@
 import urllib.parse
-from typing import Any, Dict, Optional, Sequence, Union
+from typing import TYPE_CHECKING, Any, Dict, Optional, Sequence, Union
 
 import requests
-from sqlalchemy.engine.url import URL
+
+if TYPE_CHECKING:
+    from sqlalchemy.engine.url import URL
 
 # -----------------------------------------------------------------------------
 
@@ -42,7 +44,10 @@ def run_query(
     if bearer_token:
         headers["Authorization"] = f"Bearer {bearer_token}"
 
-    resp = requests.post(graphql_api, json={"query": query}, headers=headers)
+    # TODO(cancan101): figure out timeouts
+    resp = requests.post(  # noqa: S113
+        graphql_api, json={"query": query}, headers=headers
+    )
     try:
         resp.raise_for_status()
     except requests.HTTPError as ex:

@@ -29,9 +29,7 @@ shillelagh==1.2.4
 six==1.16.0
     # via python-dateutil
 sqlalchemy==1.4.42
-    # via
-    #   -r requirements.in
-    #   shillelagh
+    # via shillelagh
 typing-extensions==4.6.0
     # via
     #   -r requirements.in
