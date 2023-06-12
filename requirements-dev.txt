@@ -9,9 +9,7 @@ apsw==3.42.0.0
     #   -r requirements.txt
     #   shillelagh
 attrs==23.1.0
-    # via
-    #   flake8-bugbear
-    #   pytest
+    # via flake8-bugbear
 bandit==1.7.4
     # via flake8-bandit
 black==23.1.0
@@ -126,7 +124,7 @@ pycodestyle==2.10.0
     #   flake8-print
 pyflakes==3.0.1
     # via flake8
-pytest==7.2.0
+pytest==7.3.2
     # via
     #   -r requirements-dev.in
     #   pytest-cov
