@@ -140,12 +140,13 @@ pyyaml==6.0
     # via
     #   bandit
     #   pre-commit
+    #   responses
 requests==2.31.0
     # via
     #   -r requirements.txt
     #   responses
     #   shillelagh
-responses==0.20.0
+responses==0.23.1
     # via -r requirements-dev.in
 shillelagh==1.2.4
     # via -r requirements.txt
@@ -164,6 +165,8 @@ sqlalchemy2-stubs==0.0.2a34
     # via sqlalchemy
 stevedore==5.1.0
     # via bandit
+types-pyyaml==6.0.12.10
+    # via responses
 types-requests==2.28.11.15
     # via -r requirements-dev.in
 types-setuptools==67.8.0.0
