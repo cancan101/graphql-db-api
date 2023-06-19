@@ -28,11 +28,12 @@ shillelagh==1.2.4
     # via -r requirements.in
 six==1.16.0
     # via python-dateutil
-sqlalchemy==1.4.42
+sqlalchemy==2.0.16
     # via shillelagh
 typing-extensions==4.6.3
     # via
     #   -r requirements.in
     #   shillelagh
+    #   sqlalchemy
 urllib3==2.0.2
     # via requests
