@@ -124,7 +124,7 @@ pycodestyle==2.10.0
     #   flake8-print
 pyflakes==3.0.1
     # via flake8
-pytest==7.3.2
+pytest==7.4.0
     # via
     #   -r requirements-dev.in
     #   pytest-cov
