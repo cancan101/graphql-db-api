@@ -167,7 +167,7 @@ types-pyyaml==6.0.12.10
     # via responses
 types-requests==2.31.0.1
     # via -r requirements-dev.in
-types-setuptools==67.8.0.0
+types-setuptools==68.0.0.0
     # via -r requirements-dev.in
 types-urllib3==1.26.25.13
     # via types-requests
