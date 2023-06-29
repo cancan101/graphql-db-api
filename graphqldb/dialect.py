@@ -42,7 +42,7 @@ class APSWGraphQLDialect(APSWDialect):
     }
   }
 }"""
-        bearer_token = str(url.password) if url.password else None
+        bearer_token = self.db_url_to_graphql_bearer(url)
         data = run_query(graphql_api, query=query, bearer_token=bearer_token)
 
         # TODO(cancan101): filter out "non-Array" returns
@@ -57,6 +57,9 @@ class APSWGraphQLDialect(APSWDialect):
         port_str = "" if url.port is None else f":{url.port}"
         return f"{proto}://{url.host}{port_str}/{url.database}"
 
+    def db_url_to_graphql_bearer(self, url: URL) -> Optional[str]:
+        return str(url.password) if url.password else None
+
     def create_connect_args(
         self,
         url: URL,
@@ -68,7 +71,8 @@ class APSWGraphQLDialect(APSWDialect):
                 f"Unexpected adapter_kwargs found: {kwargs['adapter_kwargs']}"
             )
 
-        bearer_token = str(url.password) if url.password else None
+        graphql_api = self.db_url_to_graphql_api(url)
+        bearer_token = self.db_url_to_graphql_bearer(url)
 
         query = extract_query(url)
         pagination_relay_param = query.get("is_relay")
@@ -80,7 +84,7 @@ class APSWGraphQLDialect(APSWDialect):
 
         adapter_kwargs = {
             ADAPTER_NAME: {
-                "graphql_api": self.db_url_to_graphql_api(url),
+                "graphql_api": graphql_api,
                 "bearer_token": bearer_token,
                 "pagination_relay": pagination_relay,
             }
