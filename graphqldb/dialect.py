@@ -28,7 +28,11 @@ class APSWGraphQLDialect(APSWDialect):
         super().__init__(safe=True, adapters=[ADAPTER_NAME], **kwargs)
 
     def get_table_names(
-        self, connection: Connection, schema: Optional[str] = None, **kwargs: Any
+        self,
+        connection: Connection,
+        schema: Optional[str] = None,
+        sqlite_include_internal: bool = False,
+        **kwargs: Any,
     ) -> List[str]:
         url = connection.engine.url
         graphql_api = self.db_url_to_graphql_api(url)
