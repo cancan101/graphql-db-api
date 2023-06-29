@@ -32,7 +32,6 @@ sqlalchemy==1.4.42
     # via shillelagh
 typing-extensions==4.6.3
     # via
-    #   -r requirements.in
     #   shillelagh
 urllib3==2.0.3
     # via requests
