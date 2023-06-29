@@ -11,7 +11,11 @@ This module provides a SQLAlchemy dialect.
 ```python
 from sqlalchemy.engine import create_engine
 
-engine = create_engine('graphql://host:port/path?is_https=0')
+# Over HTTPS (default):
+engine_https = create_engine('graphql://host:port/path')
+
+# Over HTTP:
+engine_http = create_engine('graphql://host:port/path?is_https=0')
 ```
 
 ### Example Usage
@@ -25,10 +29,12 @@ from sqlalchemy import text
 # We use GraphQL SWAPI (The Star Wars API) c/o Netlify:
 engine = create_engine('graphql://swapi-graphql.netlify.app/.netlify/functions/index')
 
+# Demonstration of requesting nested resource of homeworld
+# and then selecting fields from it
+query = "select name, homeworld__name from 'allPeople?include=homeworld'"
+
 with engine.connect() as connection:
-    # Demonstration of requesting nested resource of homeworld
-    # and then selecting fields from it
-    for row in connection.execute(text("select name, homeworld__name from 'allPeople?include=homeworld'")):
+    for row in connection.execute(text(query)):
         print(row)
 ```
 
@@ -40,8 +46,12 @@ from sqlalchemy import text
 
 engine = create_engine('graphql://pet-library.moonhighway.com/')
 
+# The default assumes top level is a Connection.
+# For Lists, we must disable this:
+query = "select id, name from 'allPets?is_connection=0'"
+
 with engine.connect() as connection:
-    for row in connection.execute(text("select id, name from 'allPets?is_connection=0'")):
+    for row in connection.execute(text(query)):
         print(row)
 ```
 
