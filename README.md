@@ -16,6 +16,9 @@ engine_https = create_engine('graphql://host:port/path')
 
 # Over HTTP:
 engine_http = create_engine('graphql://host:port/path?is_https=0')
+
+# With a `Bearer` token in the `Authorization` header:
+engine_http = create_engine('graphql://:token@host:port/path')
 ```
 
 ### Example Usage

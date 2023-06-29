@@ -83,12 +83,24 @@ def test_query_non_connection(petstore_connection: Connection) -> None:
 
 
 def test_db_url_to_graphql_api():
+    dialect = APSWGraphQLDialect()
+
     url_http = make_url("graphql://host:123/path?is_https=0")
-    assert (
-        APSWGraphQLDialect().db_url_to_graphql_api(url_http) == "http://host:123/path"
-    )
+    assert dialect.db_url_to_graphql_api(url_http) == "http://host:123/path"
 
     url_https = make_url("graphql://host:123/path?is_https=1")
-    assert (
-        APSWGraphQLDialect().db_url_to_graphql_api(url_https) == "https://host:123/path"
-    )
+    assert dialect.db_url_to_graphql_api(url_https) == "https://host:123/path"
+
+
+def test_create_connect_args():
+    dialect = APSWGraphQLDialect()
+
+    url_http = make_url("graphql://:abcd@host:123/path?is_https=0&is_relay=1")
+
+    _, kwargs = dialect.create_connect_args(url_http)
+    adapter_kwargs = kwargs["adapter_kwargs"]
+    kwargs_graphql = adapter_kwargs["graphql"]
+
+    assert kwargs_graphql["graphql_api"] == "http://host:123/path"
+    assert kwargs_graphql["bearer_token"] == "abcd"
+    assert kwargs_graphql["pagination_relay"] is True
