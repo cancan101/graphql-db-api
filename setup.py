@@ -112,7 +112,6 @@ setup(
     install_requires=(
         "shillelagh >= 1.2.0",
         "requests >= 2.31.0",
-        "typing-extensions",
     ),
     license="MIT",
     classifiers=[
@@ -121,7 +120,6 @@ setup(
         "Development Status :: 2 - Pre-Alpha",
         "License :: OSI Approved :: MIT License",
         "Programming Language :: Python",
-        "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",

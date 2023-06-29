@@ -10,6 +10,7 @@ from typing import (
     Optional,
     Sequence,
     Tuple,
+    TypedDict,
     Union,
     cast,
 )
@@ -30,7 +31,6 @@ from shillelagh.fields import (
 from shillelagh.typing import RequestedOrder
 
 from .lib import get_last_query, run_query
-from .types import TypedDict
 
 # -----------------------------------------------------------------------------
 
