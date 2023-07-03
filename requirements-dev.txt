@@ -113,7 +113,7 @@ platformdirs==3.5.1
     # via
     #   black
     #   virtualenv
-pluggy==1.0.0
+pluggy==1.2.0
     # via pytest
 pre-commit==3.1.1
     # via -r requirements-dev.in
