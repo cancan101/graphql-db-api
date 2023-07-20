@@ -22,10 +22,13 @@ class APSWGraphQLDialect(APSWDialect):
 
     def __init__(
         self,
+        is_lists: Optional[List[str]] = None,
         **kwargs: Any,
     ):
         # We tell Shillelagh that this dialect supports just one adapter
         super().__init__(safe=True, adapters=[ADAPTER_NAME], **kwargs)
+
+        self.is_lists = is_lists
 
     def get_table_names(
         self,
@@ -91,6 +94,7 @@ class APSWGraphQLDialect(APSWDialect):
                 "graphql_api": graphql_api,
                 "bearer_token": bearer_token,
                 "pagination_relay": pagination_relay,
+                "is_lists": self.is_lists,
             }
         }
 
