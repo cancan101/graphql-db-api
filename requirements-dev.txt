@@ -154,13 +154,10 @@ six==1.16.0
     #   python-dateutil
 smmap==5.0.0
     # via gitdb
-sqlalchemy[mypy]==1.4.42
+sqlalchemy[mypy]==2.0.19
     # via
-    #   -r requirements-dev.in
     #   -r requirements.txt
     #   shillelagh
-sqlalchemy2-stubs==0.0.2a34
-    # via sqlalchemy
 stevedore==5.1.0
     # via bandit
 types-pyyaml==6.0.12.10
@@ -176,7 +173,7 @@ typing-extensions==4.6.3
     #   -r requirements.txt
     #   mypy
     #   shillelagh
-    #   sqlalchemy2-stubs
+    #   sqlalchemy
 urllib3==2.0.3
     # via
     #   -r requirements.txt
