@@ -263,15 +263,18 @@ def _get_variable_argument_str(args: Dict[str, QueryArg]) -> str:
 class GraphQLAdapter(Adapter):
     safe = True
 
+    is_connection: bool
+
     def __init__(
         self,
         table: str,
         include: Collection[str],
         query_args: Dict[str, QueryArg],
-        is_connection: bool,
+        is_connection: Optional[bool],
         graphql_api: str,
         bearer_token: Optional[str] = None,
         pagination_relay: Optional[bool] = None,
+        list_queries: Optional[List[str]] = None,
     ):
         super().__init__()
 
@@ -280,7 +283,11 @@ class GraphQLAdapter(Adapter):
 
         self.include = set(include)
         self.query_args = query_args
-        self.is_connection = is_connection
+
+        if is_connection is not None:
+            self.is_connection = is_connection
+        else:
+            self.is_connection = list_queries is None or table not in list_queries
 
         self.graphql_api = graphql_api
         self.bearer_token = bearer_token
@@ -440,7 +447,9 @@ class GraphQLAdapter(Adapter):
         return True
 
     @staticmethod
-    def parse_uri(table: str) -> Tuple[str, List[str], Dict[str, QueryArg], bool]:
+    def parse_uri(
+        table: str,
+    ) -> Tuple[str, List[str], Dict[str, QueryArg], Optional[bool]]:
         """
         This will pass in the first n args of __init__ for the Adapter
         """
@@ -448,7 +457,11 @@ class GraphQLAdapter(Adapter):
         query_string = parse_qs(parsed.query)
 
         include_entry = query_string.get("include")
-        is_connection = get_last_query(query_string.get("is_connection", "1")) != "0"
+        is_connection_raw_qs = query_string.get("is_connection")
+        if is_connection_raw_qs is None:
+            is_connection = None
+        else:
+            is_connection = get_last_query(is_connection_raw_qs) != "0"
 
         include: List[str] = []
         if include_entry:

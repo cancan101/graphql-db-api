@@ -43,6 +43,8 @@ with engine.connect() as connection:
 
 #### Querying Lists
 
+We can mark a given GQL query as being a List when we query that "Table" using a query parameter:
+
 ```python
 from sqlalchemy import create_engine
 from sqlalchemy import text
@@ -52,6 +54,25 @@ engine = create_engine('graphql://pet-library.moonhighway.com/')
 # The default assumes top level is a Connection.
 # For Lists, we must disable this:
 query = "select id, name from 'allPets?is_connection=0'"
+
+with engine.connect() as connection:
+    for row in connection.execute(text(query)):
+        print(row)
+```
+
+alternatively, we can set that at the `Engine` level:
+
+```python
+from sqlalchemy import create_engine
+from sqlalchemy import text
+
+# We mark 'allPets' as being a List at the Engine level:
+engine = create_engine(
+    'graphql://pet-library.moonhighway.com/',
+    list_queries=["allPets"],
+)
+
+query = "select id, name from allPets"
 
 with engine.connect() as connection:
     for row in connection.execute(text(query)):
