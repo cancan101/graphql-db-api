@@ -22,7 +22,7 @@ certifi==2023.5.7
     #   requests
 cfgv==3.3.1
     # via pre-commit
-charset-normalizer==3.1.0
+charset-normalizer==3.2.0
     # via
     #   -r requirements.txt
     #   requests
@@ -156,6 +156,7 @@ smmap==5.0.0
     # via gitdb
 sqlalchemy[mypy]==2.0.19
     # via
+    #   -r requirements-dev.in
     #   -r requirements.txt
     #   shillelagh
 stevedore==5.1.0
