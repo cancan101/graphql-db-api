@@ -47,6 +47,15 @@ def petstore_connection(swapi_engine: Engine) -> Generator[Connection, None, Non
         yield connection
 
 
+@pytest.fixture
+def petstore_connection_on_engine(
+    swapi_engine: Engine,
+) -> Generator[Connection, None, None]:
+    petstore_engine = create_engine(PETSTORE_GRAPHQL_DB_URL, list_queries=["allPets"])
+    with petstore_engine.connect() as connection:
+        yield connection
+
+
 # -----------------------------------------------------------------------------
 
 

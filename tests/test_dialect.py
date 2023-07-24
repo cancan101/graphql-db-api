@@ -82,6 +82,21 @@ def test_query_non_connection(petstore_connection: Connection) -> None:
     assert len(list(result)) == 25
 
 
+def test_query_non_connection_on_engine(
+    petstore_connection_on_engine: Connection,
+) -> None:
+    """Test querying against a non-connection (i.e. a List)."""
+    result = petstore_connection_on_engine.execute(
+        text(
+            """select
+                id
+            from
+                allPets"""
+        )
+    )
+    assert len(list(result)) == 25
+
+
 def test_db_url_to_graphql_api():
     dialect = APSWGraphQLDialect()
 
