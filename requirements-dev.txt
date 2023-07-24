@@ -156,6 +156,7 @@ smmap==5.0.0
     # via gitdb
 sqlalchemy[mypy]==2.0.19
     # via
+    #   -r requirements-dev.in
     #   -r requirements.txt
     #   shillelagh
 stevedore==5.1.0
@@ -168,7 +169,7 @@ types-setuptools==68.0.0.0
     # via -r requirements-dev.in
 types-urllib3==1.26.25.13
     # via types-requests
-typing-extensions==4.6.3
+typing-extensions==4.7.1
     # via
     #   -r requirements.txt
     #   mypy
