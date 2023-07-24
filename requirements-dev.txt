@@ -14,7 +14,7 @@ bandit==1.7.5
     # via flake8-bandit
 black==23.3.0
     # via -r requirements-dev.in
-build==0.9.0
+build==0.10.0
     # via pip-tools
 certifi==2023.5.7
     # via
@@ -109,8 +109,6 @@ pathspec==0.11.1
     # via black
 pbr==5.11.1
     # via stevedore
-pep517==0.13.0
-    # via build
 pip-tools==7.1.0
     # via -r requirements-dev.in
 platformdirs==3.9.1
@@ -130,6 +128,8 @@ pyflakes==3.0.1
     # via flake8
 pygments==2.15.1
     # via rich
+pyproject-hooks==1.0.0
+    # via build
 pytest==7.4.0
     # via
     #   -r requirements-dev.in
