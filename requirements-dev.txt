@@ -154,7 +154,7 @@ six==1.16.0
     #   python-dateutil
 smmap==5.0.0
     # via gitdb
-sqlalchemy[mypy]==2.0.17
+sqlalchemy[mypy]==2.0.19
     # via
     #   -r requirements.txt
     #   shillelagh
