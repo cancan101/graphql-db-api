@@ -274,7 +274,7 @@ class GraphQLAdapter(Adapter):
         graphql_api: str,
         bearer_token: Optional[str] = None,
         pagination_relay: Optional[bool] = None,
-        is_lists: Optional[List[str]] = None,
+        list_queries: Optional[List[str]] = None,
     ):
         super().__init__()
 
@@ -287,7 +287,7 @@ class GraphQLAdapter(Adapter):
         if is_connection is not None:
             self.is_connection = is_connection
         else:
-            self.is_connection = is_lists is None or table not in is_lists
+            self.is_connection = list_queries is None or table not in list_queries
 
         self.graphql_api = graphql_api
         self.bearer_token = bearer_token

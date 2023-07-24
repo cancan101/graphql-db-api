@@ -93,7 +93,7 @@ def test_db_url_to_graphql_api():
 
 
 def test_create_connect_args():
-    dialect = APSWGraphQLDialect()
+    dialect = APSWGraphQLDialect(list_queries=["abcd"])
 
     url_http = make_url("graphql://:abcd@host:123/path?is_https=0&is_relay=1")
 
@@ -104,3 +104,4 @@ def test_create_connect_args():
     assert kwargs_graphql["graphql_api"] == "http://host:123/path"
     assert kwargs_graphql["bearer_token"] == "abcd"
     assert kwargs_graphql["pagination_relay"] is True
+    assert kwargs_graphql["list_queries"] == ["abcd"]
