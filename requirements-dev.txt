@@ -154,7 +154,7 @@ responses==0.23.1
     # via -r requirements-dev.in
 rich==13.4.2
     # via bandit
-shillelagh==1.2.4
+shillelagh==1.2.6
     # via -r requirements.txt
 six==1.16.0
     # via
