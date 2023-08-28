@@ -24,7 +24,7 @@ requests==2.31.0
     # via
     #   -r requirements.in
     #   shillelagh
-shillelagh==1.2.4
+shillelagh==1.2.7
     # via -r requirements.in
 six==1.16.0
     # via python-dateutil
