@@ -8,7 +8,7 @@ apsw==3.42.0.0
     # via shillelagh
 certifi==2023.7.22
     # via requests
-charset-normalizer==3.1.0
+charset-normalizer==3.3.1
     # via requests
 greenlet==2.0.2
     # via
