@@ -34,6 +34,8 @@ coverage[toml]==6.5.0
     # via pytest-cov
 distlib==0.3.7
     # via virtualenv
+exceptiongroup==1.2.0
+    # via pytest
 filelock==3.12.2
     # via virtualenv
 flake8==6.0.0
@@ -169,13 +171,22 @@ sqlalchemy[mypy]==2.0.19
     #   shillelagh
 stevedore==5.1.0
     # via bandit
+tomli==2.0.1
+    # via
+    #   black
+    #   build
+    #   coverage
+    #   mypy
+    #   pip-tools
+    #   pyproject-hooks
+    #   pytest
 types-pyyaml==6.0.12.12
     # via responses
 types-requests==2.31.0.1
     # via -r requirements-dev.in
 types-setuptools==68.0.0.0
     # via -r requirements-dev.in
-types-urllib3==1.26.25.13
+types-urllib3==1.26.25.14
     # via types-requests
 typing-extensions==4.7.1
     # via
