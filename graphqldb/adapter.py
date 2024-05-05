@@ -68,6 +68,11 @@ def parse_gql_type(type_info: TypeInfo) -> Field:
         # TODO(cancan101): figure out if we want to map this to UUID, int, etc
         # This should probably be an API-level setting
         return String()
+    elif name == "IRI":
+        # TODO(cancan101): figure out if we want to map this to Python
+        # native type, string, etc.
+        # This should probably be an API-level setting
+        return String()
     elif name == "Int":
         return Integer()
     elif name == "Float":
