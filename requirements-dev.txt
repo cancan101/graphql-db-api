@@ -192,7 +192,7 @@ tomli==2.0.1
     #   pip-tools
     #   pyproject-hooks
     #   pytest
-types-pyyaml==6.0.12.12
+types-pyyaml==6.0.12.20240311
     # via responses
 types-requests==2.31.0.1
     # via -r requirements-dev.in
