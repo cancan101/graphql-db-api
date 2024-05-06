@@ -150,7 +150,7 @@ python-dateutil==2.8.2
     # via
     #   -r requirements.txt
     #   shillelagh
-pyyaml==6.0
+pyyaml==6.0.1
     # via
     #   bandit
     #   pre-commit
