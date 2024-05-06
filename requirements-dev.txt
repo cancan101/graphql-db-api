@@ -116,7 +116,7 @@ packaging==23.1
     #   shillelagh
 pathspec==0.11.1
     # via black
-pbr==5.11.1
+pbr==6.0.0
     # via stevedore
 pip-tools==7.1.0
     # via -r requirements-dev.in
