@@ -62,4 +62,5 @@ jobs:
           flags: unittests
           env_vars: OS,PYTHON
           name: codecov-umbrella
+          token: ${{ secrets.CODECOV_TOKEN }}          
           fail_ci_if_error: true
