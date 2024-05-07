@@ -15,7 +15,7 @@ attrs==23.1.0
     #   requests-cache
 bandit==1.7.8
     # via flake8-bandit
-black==23.3.0
+black==24.4.2
     # via -r requirements-dev.in
 build==0.10.0
     # via pip-tools
@@ -197,6 +197,7 @@ types-urllib3==1.26.25.14
 typing-extensions==4.7.1
     # via
     #   -r requirements.txt
+    #   black
     #   cattrs
     #   mypy
     #   shillelagh
