@@ -136,7 +136,7 @@ pygments==2.15.1
     # via rich
 pyproject-hooks==1.0.0
     # via build
-pytest==7.4.0
+pytest==8.2.0
     # via
     #   -r requirements-dev.in
     #   pytest-cov
