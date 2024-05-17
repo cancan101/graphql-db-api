@@ -68,6 +68,11 @@ def parse_gql_type(type_info: TypeInfo) -> Field:
         # TODO(cancan101): figure out if we want to map this to UUID, int, etc
         # This should probably be an API-level setting
         return String()
+    elif name == "IRI":
+        # TODO(cancan101): figure out if we want to map this to Python
+        # native type, string, etc.
+        # This should probably be an API-level setting
+        return String()
     elif name == "Int":
         return Integer()
     elif name == "Float":
@@ -415,17 +420,24 @@ class GraphQLAdapter(Adapter):
             list_type = cast(TypeInfo, list_type)
 
             item_container_type = list_type["ofType"]
-            if item_container_type is None:
+            item_container_name = list_type["name"]
+            if item_container_type is not None:
+                # TODO(cancan101): put this info into type system
+                item_container_type = cast(TypeInfo, item_container_type)
+            elif item_container_name is not None:
+                item_container_type = list_type
+            else:
                 raise ValueError("Unable to resolve item_container_type")
 
-            # TODO(cancan101): put this info into type system
-            item_container_type = cast(TypeInfo, item_container_type)
-
             node_type = item_container_type["ofType"]
-            if node_type is None:
+            node_name = item_container_type["name"]
+            if node_type is not None:
+                node_type_name = node_type["name"]
+            elif node_name is not None:
+                node_type_name = node_name
+            else:
                 raise ValueError("Unable to resolve node_type")
 
-            node_type_name = node_type["name"]
             if node_type_name is None:
                 raise ValueError("Unable to resolve node_type_name")
 
