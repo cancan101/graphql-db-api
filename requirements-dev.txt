@@ -159,7 +159,7 @@ requests==2.31.0
     #   shillelagh
 requests-cache==1.2.0
     # via shillelagh
-responses==0.23.1
+responses==0.25.3
     # via -r requirements-dev.in
 rich==13.4.2
     # via bandit
@@ -186,8 +186,6 @@ tomli==2.0.1
     #   pip-tools
     #   pyproject-hooks
     #   pytest
-types-pyyaml==6.0.12.20240311
-    # via responses
 types-requests==2.31.0.1
     # via -r requirements-dev.in
 types-setuptools==68.0.0.0
